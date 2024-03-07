@@ -3,6 +3,19 @@ use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::NoPeso;
 
 #[test]
+fn test_adicion_aristas()
+{
+    let mut grafo0: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
+                                                                Arista::arista_sin_peso(2, 3),
+                                                                Arista::arista_sin_peso(3, 4),
+                                                                Arista::VerticeAislado(10),
+                                                                Arista::arista_sin_peso(3, 2)].to_vec());
+    assert_eq!(grafo0.get_aristas().len(), 4);
+    grafo0.add_aristas(vec![Arista::arista_sin_peso(2, 3), Arista::arista_sin_peso(3, 2)]);
+    assert_eq!(grafo0.get_aristas().len(), 4);
+}
+
+#[test]
 fn test_grado()
 {
     let grafo0: Grafo<i32, grafo_rs::grafo_rs::NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),

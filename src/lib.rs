@@ -164,16 +164,14 @@ pub mod grafo_rs
         /// 
         pub fn add_aristas(&mut self, lista: Vec<Arista<Vertice, Peso>>)
         {
-            let mut lista_unica: Vec<Arista<Vertice, Peso>> = vec![];
-
+            self.lista_aristas.reserve(lista.len());
             for arista in lista.into_iter()
             {
-                if !lista_unica.contains(&arista)
+                if !self.lista_aristas.contains(&arista)
                 {
-                    lista_unica.push(arista);
+                    self.lista_aristas.push(arista);
                 }
             }
-            self.lista_aristas.append(&mut lista_unica);
         }
 
         ///
@@ -182,8 +180,8 @@ pub mod grafo_rs
         /// 
         pub fn add_vertices(&mut self, lista: Vec<Vertice>)
         {
-            let mut lista_aristas: Vec<Arista<Vertice, Peso>> = lista.into_iter().map(|x| Arista::<Vertice, Peso>::VerticeAislado(x)).collect();
-            self.lista_aristas.append(&mut lista_aristas);
+            let lista_aristas: Vec<Arista<Vertice, Peso>> = lista.into_iter().map(|x| Arista::<Vertice, Peso>::VerticeAislado(x)).collect();
+            self.add_aristas(lista_aristas);
         }
 
         ///

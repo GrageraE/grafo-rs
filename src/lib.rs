@@ -238,6 +238,7 @@ pub mod grafo_rs
             {
                 if arista.arista_contiene_vertice(&v)
                 {
+                    encontrado = true;
                     let (v1, v2) = arista.get_vertices().unwrap();
                     match *v == *v1 {
                         true => { res.push(v2); },

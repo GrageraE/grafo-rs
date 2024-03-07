@@ -22,8 +22,8 @@ fn test_entorno()
                                                         Arista::arista_sin_peso(2, 3),
                                                         Arista::VerticeAislado(5)].to_vec());
 
-    assert_eq!(vec![2], grafo0.entorno(&1).into_iter().map(|x| *x).collect::<Vec<i32>>());
-    assert_eq!(vec![1, 3], grafo0.entorno(&2).into_iter().map(|x| *x).collect::<Vec<i32>>());
+    assert_eq!(vec![2], grafo0.entorno(&1).unwrap().into_iter().map(|x| *x).collect::<Vec<i32>>());
+    assert_eq!(vec![1, 3], grafo0.entorno(&2).unwrap().into_iter().map(|x| *x).collect::<Vec<i32>>());
 }
 
 #[test]
@@ -34,7 +34,7 @@ fn test_get_vertices()
                                                         Arista::arista_sin_peso(3, 2),
                                                         Arista::VerticeAislado(5)].to_vec());
 
-    assert_eq!(vec![1, 2, 3, 5], grafo0.get_vertices());
+    assert_eq!(vec![1, 2, 3, 5], grafo0.get_vertices().into_iter().map(|x| *x).collect::<Vec<i32>>());
 }
 
 #[test]

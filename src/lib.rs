@@ -118,7 +118,10 @@ pub mod grafo_rs
 
     impl<Vertice, Peso> Grafo<Vertice, Peso> 
     where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
-        /// Devuelve el numero de vertices
+        /// 
+        /// PRE: Cierto
+        /// POST: Grafo vacio
+        /// 
         pub fn new() -> Self
         {
             Grafo{
@@ -126,11 +129,19 @@ pub mod grafo_rs
             }
         }
 
+        ///
+        /// PRE: Grafo
+        /// POST: Devuelve el numero de vertices
+        /// 
         pub fn size(&self) -> usize
         {
             self.get_vertices().len()
         }
 
+        ///
+        /// PRE: Vector con Aristas propias
+        /// POST: Grafo contruido a partir de dichas aristas, no repitiendo ninguna
+        /// 
         pub fn from_aristas(lista: Vec<Arista<Vertice, Peso>>) -> Self
         {
             let mut lista_aristas: Vec<Arista<Vertice, Peso>> = vec![];
@@ -147,6 +158,10 @@ pub mod grafo_rs
             }
         }
 
+        ///
+        /// PRE: Grafo modificable y Vector con las Aristas propias
+        /// POST: Se modifca el grafo añadiendo las aristas necesarias, no repitiendo ninguna 
+        /// 
         pub fn add_aristas(&mut self, lista: Vec<Arista<Vertice, Peso>>)
         {
             let mut lista_unica: Vec<Arista<Vertice, Peso>> = vec![];
@@ -161,37 +176,49 @@ pub mod grafo_rs
             self.lista_aristas.append(&mut lista_unica);
         }
 
+        ///
+        /// PRE: Grafo modificable y Vector con Vertices propios
+        /// POST. El grafo se modifica y añade los vertices proporcionados
+        /// 
         pub fn add_vertices(&mut self, lista: Vec<Vertice>)
         {
             let mut lista_aristas: Vec<Arista<Vertice, Peso>> = lista.into_iter().map(|x| Arista::<Vertice, Peso>::VerticeAislado(x)).collect();
             self.lista_aristas.append(&mut lista_aristas);
         }
 
+        ///
+        /// PRE: Grafo
+        /// POST: Referencia a la lista de aristas, incluyendo vertices aislados
+        /// 
         pub fn get_aristas(&self) -> &Vec<Arista<Vertice, Peso>>
         {
             &self.lista_aristas
         }
 
-        pub fn get_vertices(&self) -> Vec<Vertice>
+        ///
+        /// PRE: Grafo
+        /// POST: Vector con referencias a los vertices del grafo
+        /// 
+        pub fn get_vertices(&self) -> Vec<&Vertice>
         {
-            let mut result: Vec<Vertice> = vec![];
+            let mut result: Vec<&Vertice> = vec![];
             for arista in self.lista_aristas.iter()
             {
                 match arista {
                     Arista::Arista(v, w, _) => {
-                        if !result.contains(v)
+                        if !result.contains(&v)
                         {
-                            result.push(v.clone());
+                            result.push(v);
                         }
-                        if !result.contains(w)
+                        if !result.contains(&w)
                         {
-                            result.push(w.clone());
+                            result.push(w);
                         }
                     },
                     Arista::VerticeAislado(v) => {
-                        if !result.contains(v)
+                        if !result.contains(&v)
                         {
-                            result.push(v.clone());
+                            result.push(v);
                         }
                     }
                 }
@@ -199,9 +226,14 @@ pub mod grafo_rs
             result
         }
 
-        pub fn entorno(&self, v: &Vertice) -> Vec<&Vertice>
+        ///
+        /// PRE: Vertice al que calcular su entorno
+        /// POST: Devuelve un vector con referencias a los vertices adyacentes a v. Si no pertenece al grafo, None
+        /// 
+        pub fn entorno(&self, v: &Vertice) -> Option<Vec<&Vertice>>
         {
             let mut res = vec![];
+            let mut encontrado = false;
             for arista in self.lista_aristas.iter()
             {
                 if arista.arista_contiene_vertice(&v)
@@ -212,10 +244,36 @@ pub mod grafo_rs
                         false => { res.push(v1); }
                     }
                 }
+                else if !encontrado
+                {
+                    if let Arista::VerticeAislado(v0) = arista
+                    {
+                        encontrado = *v == *v0;
+                    }
+                }
             }
-            res
+            match encontrado {
+                true => Some(res),
+                _ => None
+            }
         }
 
+        ///
+        /// PRE: El vertice tiene que pertenecer al grafo
+        /// POST: Vector con referencias a las aristas
+        /// 
+        pub fn aristas_por_vertice(&self, v: &Vertice) -> Vec<&Arista<Vertice, Peso>>
+        {
+            let aristas_vertice: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter().filter(|x| x.arista_contiene_vertice(v))
+                                                            .collect();
+            aristas_vertice
+        }
+
+
+        ///
+        /// PRE: El vertice al que calcular su grado
+        /// POST: Valor opcional con el grado. Si el vertice no esta incluido en el grafo, devuelve None
+        /// 
         pub fn grado(&self, v: &Vertice) -> Option<usize>
         {
             let mut encontrado = false;
@@ -247,6 +305,10 @@ pub mod grafo_rs
             }
         }
 
+        ///
+        /// PRE: Grafo
+        /// POST: Vector con la sucesion decreciente de grados
+        /// 
         pub fn sucesion_grados(&self) -> Vec<usize>
         {
             let mut sucesion = vec![];

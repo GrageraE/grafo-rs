@@ -61,6 +61,15 @@ pub mod grafo_rs
             }
             None
         }
+
+        pub fn get_peso(&self) -> Option<&Peso>
+        {
+            if let Self::Arista(_, _, p) = &self
+            {
+                return p.as_ref();
+            }
+            None
+        }
     }
 
     impl<Vertice, Peso> Clone for Arista<Vertice, Peso> 
@@ -110,11 +119,6 @@ pub mod grafo_rs
     impl<Vertice, Peso> Grafo<Vertice, Peso> 
     where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
         /// Devuelve el numero de vertices
-        pub fn size(&self) -> usize
-        {
-            unimplemented!();
-        }
-
         pub fn new() -> Self
         {
             Grafo{
@@ -122,23 +126,77 @@ pub mod grafo_rs
             }
         }
 
-        pub fn from_aristas(lista: &[Arista<Vertice, Peso>]) -> Self
+        pub fn size(&self) -> usize
         {
-            // TODO: Revisar que todas las aristas sean diferentes
+            self.get_vertices().len()
+        }
+
+        pub fn from_aristas(lista: Vec<Arista<Vertice, Peso>>) -> Self
+        {
+            let mut lista_aristas: Vec<Arista<Vertice, Peso>> = vec![];
+
+            for arista in lista.into_iter()
+            {
+                if !lista_aristas.contains(&arista)
+                {
+                    lista_aristas.push(arista);
+                }
+            }
             Self{
-                lista_aristas: lista.to_vec()
+                lista_aristas
             }
         }
 
-        pub fn add_aristas(&mut self, mut lista: Vec<Arista<Vertice, Peso>>)
+        pub fn add_aristas(&mut self, lista: Vec<Arista<Vertice, Peso>>)
         {
-            self.lista_aristas.append(&mut lista);
+            let mut lista_unica: Vec<Arista<Vertice, Peso>> = vec![];
+
+            for arista in lista.into_iter()
+            {
+                if !lista_unica.contains(&arista)
+                {
+                    lista_unica.push(arista);
+                }
+            }
+            self.lista_aristas.append(&mut lista_unica);
         }
 
         pub fn add_vertices(&mut self, lista: Vec<Vertice>)
         {
             let mut lista_aristas: Vec<Arista<Vertice, Peso>> = lista.into_iter().map(|x| Arista::<Vertice, Peso>::VerticeAislado(x)).collect();
             self.lista_aristas.append(&mut lista_aristas);
+        }
+
+        pub fn get_aristas(&self) -> &Vec<Arista<Vertice, Peso>>
+        {
+            &self.lista_aristas
+        }
+
+        pub fn get_vertices(&self) -> Vec<Vertice>
+        {
+            let mut result: Vec<Vertice> = vec![];
+            for arista in self.lista_aristas.iter()
+            {
+                match arista {
+                    Arista::Arista(v, w, _) => {
+                        if !result.contains(v)
+                        {
+                            result.push(v.clone());
+                        }
+                        if !result.contains(w)
+                        {
+                            result.push(w.clone());
+                        }
+                    },
+                    Arista::VerticeAislado(v) => {
+                        if !result.contains(v)
+                        {
+                            result.push(v.clone());
+                        }
+                    }
+                }
+            }
+            result
         }
 
         pub fn entorno(&self, v: &Vertice) -> Vec<&Vertice>
@@ -187,6 +245,19 @@ pub mod grafo_rs
                 true => Some(result),
                 _ => None
             }
+        }
+
+        pub fn sucesion_grados(&self) -> Vec<usize>
+        {
+            let mut sucesion = vec![];
+
+            for vertice in self.get_vertices()
+            {
+                sucesion.push(self.grado(&vertice).unwrap());
+            }
+
+            sucesion.sort_by(|g1, g2| g2.cmp(g1));
+            sucesion.clone()
         }
     }
 }

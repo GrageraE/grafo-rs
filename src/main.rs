@@ -1,5 +1,6 @@
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::Grafo;
+use grafo_rs::grafo_rs::NoPeso;
 
 #[test]
 fn test_grado()
@@ -18,7 +19,7 @@ fn test_grado()
 #[test]
 fn test_entorno()
 {
-    let grafo0: Grafo<i32, grafo_rs::grafo_rs::NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
+    let grafo0: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
                                                         Arista::arista_sin_peso(2, 3),
                                                         Arista::VerticeAislado(5)].to_vec());
 
@@ -29,7 +30,7 @@ fn test_entorno()
 #[test]
 fn test_get_vertices()
 {
-    let grafo0: Grafo<i32, grafo_rs::grafo_rs::NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
+    let grafo0: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
                                                         Arista::arista_sin_peso(2, 3),
                                                         Arista::arista_sin_peso(3, 2),
                                                         Arista::VerticeAislado(5)].to_vec());
@@ -40,12 +41,19 @@ fn test_get_vertices()
 #[test]
 fn test_sucesion_grados()
 {
-    let grafo0: Grafo<i32, grafo_rs::grafo_rs::NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
+    let grafo0: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
                                                         Arista::arista_sin_peso(2, 3),
                                                         Arista::arista_sin_peso(3, 2),
                                                         Arista::VerticeAislado(5)].to_vec());
 
     assert_eq!(vec![2, 1, 1, 0], grafo0.sucesion_grados());
+}
+
+#[test]
+fn test_sucesion_grafica()
+{
+    assert!(grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 1]));
+    assert!(!grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 0]));
 }
 
 fn main() {}

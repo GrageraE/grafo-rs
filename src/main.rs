@@ -16,6 +16,28 @@ fn test_adicion_aristas()
 }
 
 #[test]
+fn test_eliminacion_aristas_vertices()
+{
+    let mut grafo0: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),
+                                                                    Arista::arista_sin_peso(2, 3),
+                                                                    Arista::arista_sin_peso(3, 4),
+                                                                    Arista::VerticeAislado(10),
+                                                                    Arista::arista_sin_peso(3, 2)].to_vec());
+
+    assert_eq!(grafo0.grado(&10), Some(0), "Comprobar que el vertice 10 tiene grado 0");
+    grafo0.remove_vertice(&10);
+    assert_eq!(grafo0.grado(&10), None, "Comprobar que se haya eliminado");
+
+    let mut grafo1 = grafo0.clone();
+
+    grafo0.remove_arista(&Arista::arista_sin_peso(3, 4));
+    assert_eq!(grafo0.grado(&3), Some(1));
+
+    grafo1.remove_vertice(&2);
+    assert_eq!(grafo1.grado(&3), Some(1));
+}
+
+#[test]
 fn test_grado()
 {
     let grafo0: Grafo<i32, grafo_rs::grafo_rs::NoPeso> = Grafo::from_aristas([Arista::arista_sin_peso(1, 2),

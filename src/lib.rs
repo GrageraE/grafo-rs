@@ -281,12 +281,16 @@ pub mod grafo_rs
 
         pub fn remove_vertice(&mut self, v: &Vertice)
         {
-            let lista_aristas: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
-                                                                    .filter(|e| {
+            let lista_aristas_index: Vec<usize> = self.lista_aristas.iter().enumerate()
+                                                                    .filter(|(_, e)| {
                                                                         e.arista_contiene_vertice(v) || e.es_vetice_aislado(v)
                                                                     })
+                                                                    .map(|(i, _)| i)
                                                                     .collect();
-                                                                todo!();
+            for index in lista_aristas_index
+            {
+                self.lista_aristas.remove(index);
+            }
         }
 
         ///
@@ -417,6 +421,16 @@ pub mod grafo_rs
                     std::cmp::Ordering::Greater => { panic!("sucesion.last mayor que 0 !!"); }
                 },
                 None => false
+            }
+        }
+    }
+
+    impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
+    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+        fn clone(&self) -> Self 
+        {
+            Self {
+                lista_aristas: self.lista_aristas.clone()
             }
         }
     }

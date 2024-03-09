@@ -32,9 +32,12 @@ fn test_eliminacion_aristas_vertices()
 
     grafo0.remove_arista(&Arista::arista_sin_peso(3, 4));
     assert_eq!(grafo0.grado(&3), Some(1));
+    assert_eq!(grafo0.grado(&4), Some(0));
 
     grafo1.remove_vertice(&2);
     assert_eq!(grafo1.grado(&3), Some(1));
+    assert_eq!(grafo1.grado(&1), Some(0));
+    // println!("Lista de Vertices: {:?}", grafo1.get_vertices());
 }
 
 #[test]

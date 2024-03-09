@@ -275,7 +275,11 @@ pub mod grafo_rs
             // ya que asi se implementa en los metodos de adicion
             if let Some(index) = self.lista_aristas.iter().position(|x| *x == *e)
             {
-                self.lista_aristas.remove(index);
+                let e = self.lista_aristas.remove(index);
+                if let Arista::Arista(v0, w0, _) = e
+                {
+                    self.add_vertices(vec![v0, w0]);
+                }
             }
         }
 
@@ -287,9 +291,22 @@ pub mod grafo_rs
                                                                     })
                                                                     .map(|(i, _)| i)
                                                                     .collect();
+            let mut i: usize = 0;
             for index in lista_aristas_index
             {
-                self.lista_aristas.remove(index);
+                let e = self.lista_aristas.remove(index - i);
+                if let Arista::Arista(v0, w0, _) = e
+                {
+                    if *v == v0 
+                    {
+                        self.lista_aristas.push(Arista::VerticeAislado(w0));
+                    }
+                    else 
+                    {
+                        self.lista_aristas.push(Arista::VerticeAislado(v0));    
+                    }
+                }
+                i += 1;
             }
         }
 

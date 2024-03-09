@@ -67,6 +67,7 @@ fn test_sucesion_grafica()
 {
     assert!(grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 1]));
     assert!(!grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 0]));
+    assert!(grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![4, 4, 3, 2, 2, 2, 1]));
 }
 
 fn main() {}

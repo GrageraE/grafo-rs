@@ -22,21 +22,37 @@ pub mod grafo_rs
 
     impl<Vertice, Peso> Arista<Vertice, Peso> 
     where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+        ///
+        /// PRE: Dos vertices y un peso opcional
+        /// POST: Arista formada por dichos vertices y el peso opcional
+        ///
         pub fn arista(v: Vertice, w: Vertice, p: Option<Peso>) -> Self
         {
             Self::Arista(v, w, p)
         }
 
+        ///
+        /// PRE: Dos vertices
+        /// POST: Arista formada por dichos vertices, sin peso
+        /// 
         pub fn arista_sin_peso(v: Vertice, w: Vertice) -> Self
         {
             Self::Arista(v, w, None)
         }
 
+        ///
+        /// PRE: Vertice
+        /// POST: Vertice aislado
+        /// 
         pub fn vertice(v: Vertice) -> Self
         {
             Self::VerticeAislado(v)
         }
 
+        ///
+        /// PRE: Arista
+        /// POST: Una arista formada por los vertices de la anterior con peso 1, si es arista. None eoc
+        /// 
         pub fn peso_por_defecto(&self) -> Option<Arista<Vertice, u8>>
         {
             match &self {
@@ -45,6 +61,10 @@ pub mod grafo_rs
             }
         }
 
+        ///
+        /// PRE: Vertice
+        /// POST: Cierto si es una arista y contiene a v. Falso si no contiene a v o es vertice aislado
+        /// 
         pub fn arista_contiene_vertice(&self, v0: &Vertice) -> bool
         {
             match &self {
@@ -53,6 +73,10 @@ pub mod grafo_rs
             }
         }
 
+        ///
+        /// PRE: Arista
+        /// POST: Tupla con referencias a los vetices si es arista. None eoc
+        /// 
         pub fn get_vertices(&self) -> Option<(&Vertice, &Vertice)>
         {
             if let Self::Arista(v, w, _) = &self
@@ -62,6 +86,23 @@ pub mod grafo_rs
             None
         }
 
+        ///
+        /// PRE: Arista y Vertice
+        /// POST: Cieto si es vertice aislado y contiene a v. Falso eoc
+        /// 
+        pub fn es_vetice_aislado(&self, v: &Vertice) -> bool
+        {
+            if let Self::VerticeAislado(v0) = &self
+            {
+                return *v0 == *v;
+            }
+            false
+        }
+
+        ///
+        /// PRE: Arista
+        /// POST: Referencia a peso si lo contiene. None eoc
+        /// 
         pub fn get_peso(&self) -> Option<&Peso>
         {
             if let Self::Arista(_, _, p) = &self
@@ -225,6 +266,30 @@ pub mod grafo_rs
         }
 
         ///
+        /// PRE: Arista que se va a eliminar
+        /// POST: Grafo con la arista eliminada
+        /// 
+        pub fn remove_arista(&mut self, e: &Arista<Vertice, Peso>)
+        {
+            // Tenemos en cuenta que la arista tiene una unica ocurrencia en la lista,
+            // ya que asi se implementa en los metodos de adicion
+            if let Some(index) = self.lista_aristas.iter().position(|x| *x == *e)
+            {
+                self.lista_aristas.remove(index);
+            }
+        }
+
+        pub fn remove_vertice(&mut self, v: &Vertice)
+        {
+            let lista_aristas: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
+                                                                    .filter(|e| {
+                                                                        e.arista_contiene_vertice(v) || e.es_vetice_aislado(v)
+                                                                    })
+                                                                    .collect();
+                                                                todo!();
+        }
+
+        ///
         /// PRE: Vertice al que calcular su entorno
         /// POST: Devuelve un vector con referencias a los vertices adyacentes a v. Si no pertenece al grafo, None
         /// 
@@ -336,6 +401,7 @@ pub mod grafo_rs
             while sucesion[0] > 0
             {
                 let first = sucesion[0];
+                // Costruimos un nuevo vector
                 sucesion = sucesion.iter().enumerate().map(|(i, e)| {
                     if i > 0 && i <= first.try_into().unwrap()
                     { return *e - 1;}

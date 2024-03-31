@@ -15,13 +15,13 @@ pub mod arista
     }
 
     pub enum Arista<Vertice, Peso = NoPeso>
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         Arista(Vertice, Vertice, Option<Peso>),
         VerticeAislado(Vertice)
     }
 
     impl<Vertice, Peso> Arista<Vertice, Peso> 
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         ///
         /// PRE: Dos vertices y un peso opcional
         /// POST: Arista formada por dichos vertices y el peso opcional
@@ -114,7 +114,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> Clone for Arista<Vertice, Peso> 
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         fn clone(&self) -> Self {
             match &self {
                 Arista::Arista(v, w, p) => 
@@ -125,7 +125,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> PartialEq for Arista<Vertice, Peso> 
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         fn eq(&self, other: &Self) -> bool {
             match &self {
                 Self::Arista(v1, w1, p1) => {

@@ -4,13 +4,17 @@ pub mod grafo_rs
     pub use arista::arista::NoPeso;
     pub use arista::arista::Arista;
 
+    pub mod etiquetado;
+    pub use etiquetado::etiquetado::Etiqueta;
+    pub use etiquetado::etiquetado::Etiquetado;
+
     pub struct Grafo<Vertice, Peso = NoPeso> 
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         lista_aristas: Vec<Arista<Vertice, Peso>>,
     }
 
     impl<Vertice, Peso> Grafo<Vertice, Peso> 
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         /// 
         /// PRE: Cierto
         /// POST: Grafo vacio
@@ -295,7 +299,7 @@ pub mod grafo_rs
     }
 
     impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
-    where Vertice: PartialEq, Vertice: Clone, Peso: PartialEq, Peso: Clone {
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
         fn clone(&self) -> Self 
         {
             Self {

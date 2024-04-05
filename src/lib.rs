@@ -296,6 +296,12 @@ pub mod grafo_rs
                 None => false
             }
         }
+
+        // // Prim
+        // pub fn arbol_peso_minimo(&self) -> Arbol<Vertice, Peso>
+        // {
+            
+        // }
     }
 
     impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
@@ -304,6 +310,46 @@ pub mod grafo_rs
         {
             Self {
                 lista_aristas: self.lista_aristas.clone()
+            }
+        }
+    }
+
+    pub struct Arbol<Vertice, Peso>
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
+    {
+        grafo: Grafo<Vertice, Peso>,
+        raiz: Vertice
+    }
+
+    impl<Vertice, Peso> Arbol<Vertice, Peso> 
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
+    {
+        pub fn estructura(&self) -> &Grafo<Vertice, Peso>
+        {
+            &self.grafo
+        }
+
+        pub fn raiz(&self) -> &Vertice
+        {
+            &self.raiz
+        }
+
+        pub fn new(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
+        {
+            Self{
+                grafo,
+                raiz
+            }
+        }
+    }
+
+    impl<Vertice, Peso> Clone for Arbol<Vertice, Peso>
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
+    {
+        fn clone(&self) -> Self {
+            Self{
+                grafo: self.grafo.clone(),
+                raiz: self.raiz.clone()
             }
         }
     }

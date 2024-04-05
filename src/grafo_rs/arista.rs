@@ -133,22 +133,15 @@ pub mod arista
                     {
                         return (v1 == v2 && w1 == w2 && p1 == p2) || (v1 == w2 && v2 == w1 && p1 == p2);
                     }
-                    else 
-                    {
-                        return false;
-                    }
                 },
                 Self::VerticeAislado(v1) => {
                     if let Self::VerticeAislado(v2) = other
                     {
                         return v1 == v2;
                     }
-                    else 
-                    {
-                        return false;
-                    }
                 }
             }
+            false
         }
     }
 }

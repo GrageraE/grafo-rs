@@ -1,33 +1,33 @@
 pub mod etiquetado
 {
-    pub struct Etiqueta<'a, Vertice>
+    pub struct Etiqueta<Vertice>
     where Vertice: Clone + PartialEq {
-        vert: &'a Vertice,
+        vert: Vertice,
         valor: isize
     }
 
-    impl<'a, Vertice> Clone for Etiqueta<'a, Vertice>
+    impl<Vertice> Clone for Etiqueta<Vertice>
     where Vertice: Clone + PartialEq {
         fn clone(&self) -> Self {
             Self{
-                vert: self.vert,
+                vert: self.vert.clone(),
                 valor: self.valor
             }
         }
     }
 
-    impl<'a, Vertice> PartialEq for Etiqueta<'a, Vertice>
+    impl<Vertice> PartialEq for Etiqueta<Vertice>
     where Vertice: Clone + PartialEq {
         fn eq(&self, other: &Self) -> bool {
-            self.vert.eq(other.vert) && self.valor == other.valor
+            self.vert.eq(&other.vert) && self.valor == other.valor
         }
     }
 
-    impl<'a, Vertice> Etiqueta<'a, Vertice>
+    impl<Vertice> Etiqueta<Vertice>
     where Vertice: Clone + PartialEq {
         pub fn get_vertice(&self) -> &Vertice
         {
-            self.vert
+            &self.vert
         }
 
         pub fn get_valor(&self) -> isize
@@ -36,12 +36,12 @@ pub mod etiquetado
         }
     }
 
-    pub struct Etiquetado<'a, Vertice>
+    pub struct Etiquetado<Vertice>
     where Vertice: Clone + PartialEq {
-        datos: Vec<Etiqueta<'a, Vertice>>
+        datos: Vec<Etiqueta<Vertice>>
     }
 
-    impl<'a, Vertice> Clone for Etiquetado<'a, Vertice> 
+    impl<Vertice> Clone for Etiquetado<Vertice> 
     where Vertice: Clone + PartialEq {
         fn clone(&self) -> Self {
             Self{

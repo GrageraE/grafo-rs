@@ -1,6 +1,7 @@
 pub mod grafo_rs
 {
     pub mod arista;
+
     pub use arista::arista::NoPeso;
     pub use arista::arista::Arista;
 
@@ -297,11 +298,57 @@ pub mod grafo_rs
             }
         }
 
-        // // Prim
-        // pub fn arbol_peso_minimo(&self) -> Arbol<Vertice, Peso>
-        // {
-            
-        // }
+        ///
+        /// PRE: Cierto
+        /// POST: Arbol generador de peso minimo
+        /// NOTA: Implementacion del algoritmo de Prim. Requere que el Peso tenga un orden parcial definido
+        /// 
+        pub fn arbol_peso_minimo(&self) -> Option<Arbol<Vertice, Peso>>
+        where Peso: PartialOrd
+        {
+            let mut arbol = Self::new();
+            // Seleccionamos un vertice aleatorio
+            let vertice_inicial;
+            if let Some(e) = self.lista_aristas.get(0)
+            {
+                vertice_inicial = match e {
+                    Arista::Arista(v, _, _) => v,
+                    Arista::VerticeAislado(v) => v
+                }
+            }
+            else 
+            {
+                return None;
+            }
+
+            // Definimos un vector de aristas frontera y de vertices visitados
+            let mut aristas_frontera = Vec::<&Arista<Vertice, Peso>>::new();
+            let mut vertices_visitados = Vec::<&Vertice>::new();
+            let mut vertice_visitado = vertice_inicial;
+            let orden_grafo = self.get_vertices().len();
+
+            while vertices_visitados.len() < orden_grafo
+            {
+                // Actualizamos las aristas frontera
+                let mut extracted: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
+                        .filter(|x| x.arista_contiene_vertice(vertice_visitado))
+                        .collect();
+                aristas_frontera.append(&mut extracted);
+                for vertice in vertices_visitados.iter()
+                {
+                    aristas_frontera.retain(|x| !(x.arista_contiene_vertice(vertice)
+                                                                        && x.arista_contiene_vertice(vertice_visitado)));
+                }
+                // Añadimos la arista frontera con menor peso
+                let arista_minima = Arista::min_aristas(aristas_frontera.clone()).unwrap();
+                arbol.add_aristas(vec![arista_minima.clone()]);
+                // Actualizamos lista de vertices
+                vertices_visitados.push(vertice_visitado);
+                vertice_visitado = arista_minima.other(vertice_visitado).unwrap();
+            }
+
+            Some(Arbol::<Vertice, Peso>::new(arbol, vertice_inicial.clone()))
+        }
     }
 
     impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
@@ -323,7 +370,15 @@ pub mod grafo_rs
 
     impl<Vertice, Peso> Arbol<Vertice, Peso> 
     where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
-    {
+    {        
+        pub fn new(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
+        {
+            Self{
+                grafo,
+                raiz
+            }
+        }
+
         pub fn estructura(&self) -> &Grafo<Vertice, Peso>
         {
             &self.grafo
@@ -334,13 +389,11 @@ pub mod grafo_rs
             &self.raiz
         }
 
-        pub fn new(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
+        pub fn into_grafo(self) -> Grafo<Vertice, Peso>
         {
-            Self{
-                grafo,
-                raiz
-            }
+            self.grafo
         }
+
     }
 
     impl<Vertice, Peso> Clone for Arbol<Vertice, Peso>

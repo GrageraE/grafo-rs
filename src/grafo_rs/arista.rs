@@ -111,6 +111,51 @@ pub mod arista
             }
             None
         }
+
+        ///
+        /// PRE: Referencia a vertice
+        /// POST: Si es una arista que contiene al vertice, devuelve la otra. None eoc.
+        /// 
+        pub fn other(&self, v: &Vertice) -> Option<&Vertice>
+        {
+            if let Arista::Arista(w1, w2, _) = self
+            {
+                if w1 == v
+                {
+                    return Some(w2);
+                }
+                if w2 == v
+                {
+                    return Some(w1);
+                }
+            }
+            None
+        }
+
+        ///
+        /// PRE: Referencia a lista de aristas
+        /// POST: Referencia a Arista con peso minimo. Si la lista es vacia, None.
+        /// NOTA: Requiere que el Peso tenga un orden parcial definido. Puede usarse la funcion peso_por_defecto.
+        /// 
+        // TODO: Mejorar modelo de ownership de aristas para evitar copias innecesarias
+        pub fn min_aristas(aristas: Vec<&Arista<Vertice, Peso>>) -> Option<&Arista<Vertice, Peso>>
+        where Peso: PartialOrd
+        {
+            let mut res = aristas.get(0)?;
+
+            for i in 1..aristas.len()
+            {
+                if let Some(cmp) = aristas[i].partial_cmp(res)
+                {
+                    if let std::cmp::Ordering::Less = cmp
+                    {
+                        res = &aristas[i];
+                    }
+                }
+            }
+
+            Some(res)
+        }
     }
 
     impl<Vertice, Peso> Clone for Arista<Vertice, Peso> 
@@ -142,6 +187,21 @@ pub mod arista
                 }
             }
             false
+        }
+    }
+
+    impl<Vertice, Peso> PartialOrd for Arista<Vertice, Peso>
+    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq + PartialOrd
+    {
+        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+            if let Arista::Arista(_, _, p1) = self
+            {
+                if let Arista::Arista(_, _, p2) = other
+                {
+                    return p1.partial_cmp(p2);
+                }
+            }
+            None
         }
     }
 }

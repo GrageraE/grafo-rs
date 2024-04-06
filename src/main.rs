@@ -1,3 +1,5 @@
+use std::vec;
+
 use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::NoPeso;
@@ -93,6 +95,27 @@ fn test_sucesion_grafica()
     assert!(grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 1]));
     assert!(!grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 0]));
     assert!(grafo_rs::grafo_rs::Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![4, 4, 3, 2, 2, 2, 1]));
+}
+
+#[test]
+fn test_arbol_generador_minimo()
+{
+    let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(1, 2, Some(2)),
+                                                         Arista::arista(2, 3, Some(5)),
+                                                         Arista::arista(2, 4, Some(20)),
+                                                         Arista::arista(1, 4, Some(1))   
+                                                            ].to_vec());
+    
+    let arbol = g.arbol_peso_minimo().expect("Arbol generador no producido").into_grafo();
+    let entorno_1 = arbol.entorno(&1).expect("Entorno de 1 no existe");
+    assert!(entorno_1.contains(&&2));
+    assert!(entorno_1.contains(&&4));
+    let entorno_2 = arbol.entorno(&&2).expect("Entorno de 2 no existe");
+    assert!(entorno_2.contains(&&3));
+
+    assert!(entorno_1.len() == 2);
+    assert!(entorno_2.len() == 2);
+    assert!(arbol.get_vertices().len() == 4);
 }
 
 fn main() {}

@@ -1,5 +1,3 @@
-use std::vec;
-
 use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::NoPeso;
@@ -121,7 +119,8 @@ fn test_arbol_generador_minimo_1()
 #[test]
 fn test_arbol_generador_minimo_2()
 {
-    let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(1, 2, Some(7)),
+    let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(4, 5, Some(15)),
+                                                        Arista::arista(1, 2, Some(7)),
                                                         Arista::arista(2, 3, Some(8)),
                                                         Arista::arista(3, 5, Some(5)),
                                                         Arista::arista(1, 4, Some(5)),
@@ -132,8 +131,16 @@ fn test_arbol_generador_minimo_2()
                                                         Arista::arista(5, 6, Some(8)),
                                                         Arista::arista(6, 7, Some(11)),
                                                         Arista::arista(5, 7, Some(9))].to_vec());
-    let arbol = g.arbol_peso_minimo();
-    // TODO
+    let arbol = g.arbol_peso_minimo().expect("El arbol no existe").into_grafo();
+    
+    let entorno_1 = arbol.entorno(&1).expect("El vertice 1 no esta en el arbol");
+    assert!(entorno_1.len() == 2);
+    let entorno_4 = arbol.entorno(&4).expect("El vertice 4 no esta en el arbol");
+    assert!(entorno_4.len() == 2);
+    let entorno_7 = arbol.entorno(&7).expect("El vertice 7 no esta en el arbol");
+    assert!(entorno_7 == vec![&5]);
+    let entorno_6 = arbol.entorno(&6).expect("El vertice 6 no esta en el arbol");
+    assert!(entorno_6 == vec![&4]);
 }
 
 fn main() {}

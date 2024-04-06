@@ -98,7 +98,7 @@ fn test_sucesion_grafica()
 }
 
 #[test]
-fn test_arbol_generador_minimo()
+fn test_arbol_generador_minimo_1()
 {
     let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(1, 2, Some(2)),
                                                          Arista::arista(2, 3, Some(5)),
@@ -116,6 +116,24 @@ fn test_arbol_generador_minimo()
     assert!(entorno_1.len() == 2);
     assert!(entorno_2.len() == 2);
     assert!(arbol.get_vertices().len() == 4);
+}
+
+#[test]
+fn test_arbol_generador_minimo_2()
+{
+    let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(1, 2, Some(7)),
+                                                        Arista::arista(2, 3, Some(8)),
+                                                        Arista::arista(3, 5, Some(5)),
+                                                        Arista::arista(1, 4, Some(5)),
+                                                        Arista::arista(2, 4, Some(9)),
+                                                        Arista::arista(2, 5, Some(7)),
+                                                        Arista::arista(4, 5, Some(15)),
+                                                        Arista::arista(4, 6, Some(6)),
+                                                        Arista::arista(5, 6, Some(8)),
+                                                        Arista::arista(6, 7, Some(11)),
+                                                        Arista::arista(5, 7, Some(9))].to_vec());
+    let arbol = g.arbol_peso_minimo();
+    // TODO
 }
 
 fn main() {}

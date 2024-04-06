@@ -322,13 +322,28 @@ pub mod grafo_rs
             }
 
             // Definimos un vector de aristas frontera y de vertices visitados
-            let mut aristas_frontera = Vec::<&Arista<Vertice, Peso>>::new();
+            let mut aristas_frontera: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
+                                .filter(|x| x.arista_contiene_vertice(vertice_inicial))
+                                .collect();
+
             let mut vertices_visitados = Vec::<&Vertice>::new();
             let mut vertice_visitado = vertice_inicial;
-            let orden_grafo = self.get_vertices().len();
 
-            while vertices_visitados.len() < orden_grafo
+            while !aristas_frontera.is_empty()
             {
+                // Añadimos la arista frontera con menor peso
+                let arista_minima = Arista::min_aristas(aristas_frontera.clone()).unwrap();
+                arbol.add_aristas(vec![arista_minima.clone()]);
+                // Actualizamos lista de vertices
+                vertices_visitados.push(vertice_visitado);
+                if vertices_visitados.contains(&arista_minima.get_vertices().unwrap().0)
+                {
+                    vertice_visitado = arista_minima.get_vertices().unwrap().1;
+                }
+                else 
+                {
+                    vertice_visitado = arista_minima.get_vertices().unwrap().0;    
+                }
                 // Actualizamos las aristas frontera
                 let mut extracted: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
                         .filter(|x| x.arista_contiene_vertice(vertice_visitado))
@@ -339,12 +354,6 @@ pub mod grafo_rs
                     aristas_frontera.retain(|x| !(x.arista_contiene_vertice(vertice)
                                                                         && x.arista_contiene_vertice(vertice_visitado)));
                 }
-                // Añadimos la arista frontera con menor peso
-                let arista_minima = Arista::min_aristas(aristas_frontera.clone()).unwrap();
-                arbol.add_aristas(vec![arista_minima.clone()]);
-                // Actualizamos lista de vertices
-                vertices_visitados.push(vertice_visitado);
-                vertice_visitado = arista_minima.other(vertice_visitado).unwrap();
             }
 
             Some(Arbol::<Vertice, Peso>::new(arbol, vertice_inicial.clone()))

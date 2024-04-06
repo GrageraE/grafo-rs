@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::NoPeso;
@@ -98,7 +100,7 @@ fn test_sucesion_grafica()
 #[test]
 fn test_arbol_generador_minimo_1()
 {
-    let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(1, 2, Some(2)),
+    let g: Grafo<i32, isize> = Grafo::from_aristas([Arista::arista(1, 2, Some(2)),
                                                          Arista::arista(2, 3, Some(5)),
                                                          Arista::arista(2, 4, Some(20)),
                                                          Arista::arista(1, 4, Some(1))   
@@ -119,7 +121,7 @@ fn test_arbol_generador_minimo_1()
 #[test]
 fn test_arbol_generador_minimo_2()
 {
-    let g: Grafo<i32, i32> = Grafo::from_aristas([Arista::arista(4, 5, Some(15)),
+    let g: Grafo<i32, isize> = Grafo::from_aristas([Arista::arista(4, 5, Some(15)),
                                                         Arista::arista(1, 2, Some(7)),
                                                         Arista::arista(2, 3, Some(8)),
                                                         Arista::arista(3, 5, Some(5)),
@@ -141,6 +143,9 @@ fn test_arbol_generador_minimo_2()
     assert!(entorno_7 == vec![&5]);
     let entorno_6 = arbol.entorno(&6).expect("El vertice 6 no esta en el arbol");
     assert!(entorno_6 == vec![&4]);
+    
+    // Comprobar el peso del arbol
+    assert!(Arista::<i32, isize>::sumatorio_pesos(arbol.get_aristas()).expect("Una arista no tiene peso!!") == 39);
 }
 
 fn main() {}

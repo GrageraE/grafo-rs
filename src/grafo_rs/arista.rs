@@ -156,6 +156,22 @@ pub mod arista
 
             Some(res)
         }
+
+        ///
+        /// PRE: Vector con referencias a Aristas con Peso = isize
+        /// POST: Si todas tienen peso devuelve la suma de los pesos. None eoc
+        /// 
+        pub fn sumatorio_pesos(aristas: &Vec<Arista<Vertice, isize>>) -> Option<isize>
+        {
+            aristas.iter().filter(|x| {
+                match x {
+                    Arista::Arista(_, _, _) => true,
+                    _ => false
+                }
+            })
+            .map(|x| x.get_peso())
+            .sum()
+        }
     }
 
     impl<Vertice, Peso> Clone for Arista<Vertice, Peso> 

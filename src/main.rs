@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::NoPeso;

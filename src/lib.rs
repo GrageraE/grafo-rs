@@ -1,7 +1,6 @@
 pub mod grafo_rs
 {
     pub mod arista;
-
     pub use arista::arista::NoPeso;
     pub use arista::arista::Arista;
 
@@ -357,6 +356,41 @@ pub mod grafo_rs
             }
 
             Some(Arbol::<Vertice, Peso>::new(arbol, vertice_inicial.clone()))
+        }
+
+        ///
+        /// PRE: Vertice del grafo
+        /// POST: Arbol de busqueda en profundidad y etiquetado df. None si el vertice no se encuentra
+        /// 
+        pub fn arbol_profundidad(&self, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
+        {
+            let mut arbol = Self::new();
+            let mut df = Etiquetado::new(Some("df"));
+            // Definimos un vector con las aristas frontera de v0
+            let mut aristas_frontera: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
+                                        .filter(|x| x.arista_contiene_vertice(v0))
+                                        .collect();
+            if aristas_frontera.is_empty()
+            {
+                return None;
+            }
+            // Definimos variables temporales
+            let mut vertice_visitado = v0;
+            df.add_vertice(v0.clone(), 0);
+            let mut i: isize = 1;
+
+            while !aristas_frontera.is_empty() 
+            {
+                // Asignamos el etiquetado a los vertices adyacentes
+                let adyacentes = self.entorno(vertice_visitado).unwrap();
+                for adyacente in adyacentes.into_iter()
+                {
+                    df.add_vertice(adyacente.clone(), i);
+                }
+                
+            }
+
+            Some((Arbol::new(arbol, v0.clone()), df))
         }
     }
 

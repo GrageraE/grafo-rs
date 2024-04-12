@@ -46,6 +46,15 @@ pub mod etiquetado
         }
 
         ///
+        /// PRE: Nuevo valor
+        /// POST: Etiqueta con valor cambiado
+        /// 
+        pub fn set_valor(&mut self, valor: isize)
+        {
+            self.valor = valor;
+        }
+
+        ///
         /// PRE: Cierto
         /// POST: Referencia al vertice etiquetado
         /// 
@@ -131,6 +140,79 @@ pub mod etiquetado
         pub fn add_vertice(&mut self, v: Vertice, valor: isize)
         {
             self.datos.push(Etiqueta::new(v, valor));
+        }
+
+        ///
+        /// PRE: Cierto
+        /// POST: Referencia a etiqueta maxima. None si el etiquetado esta vacio
+        /// 
+        pub fn max(&self) -> Option<&Etiqueta<Vertice>>
+        {
+            if self.datos.is_empty()
+            {
+                return None;
+            }
+
+            let mut max = self.datos.get(0).unwrap();
+            for etiqueta in self.datos[1..].iter()
+            {
+                if etiqueta > max
+                {
+                    max = etiqueta;
+                }
+            }
+            Some(max)
+        }
+
+        ///
+        /// PRE: Cierto
+        /// POST: Referencia a etiqueta minima. None si el etiquetado esta vacio
+        /// 
+        pub fn min(&self) -> Option<&Etiqueta<Vertice>>
+        {
+            if self.datos.is_empty()
+            {
+                return None;
+            }
+
+            let mut min = self.datos.get(0).unwrap();
+            for etiqueta in self.datos[1..].iter()
+            {
+                if etiqueta < min
+                {
+                    min = etiqueta;
+                }
+            }
+            Some(min)
+        }
+
+        ///
+        /// PRE: Vertice
+        /// POST: Referencia a etiqueta con el vertice dado, si existe en el etiquetado. None si no se encuentra
+        /// 
+        pub fn buscar_vertice(&self, v: &Vertice) -> Option<&Etiqueta<Vertice>>
+        {
+            let etiqueta_vertice: Vec<&Etiqueta<Vertice>> = self.datos.iter().filter(|x| x.get_vertice() == v)
+                                                .collect();
+            if etiqueta_vertice.len() == 1
+            {
+                return Some(etiqueta_vertice[0]);
+            }
+            None
+        }
+
+        pub fn buscar_vertice_mut(&mut self, v: &Vertice) -> Option<&mut Etiqueta<Vertice>>
+        {
+            let etiqueta_vertice_index: Vec<usize> = self.datos.iter().enumerate()
+                                                    .filter(|x| x.1.get_vertice() == v)
+                                                    .map(|x| x.0)
+                                                    .collect();
+            
+            if etiqueta_vertice_index.len() == 1
+            {
+                return Some(self.datos.get_mut(etiqueta_vertice_index[0]).unwrap());
+            }
+            None
         }
 
         ///

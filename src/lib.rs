@@ -366,28 +366,74 @@ pub mod grafo_rs
         {
             let mut arbol = Self::new();
             let mut df = Etiquetado::new(Some("df"));
+            let mut temp: Etiquetado<&Vertice> = Etiquetado::new(None);
             // Definimos un vector con las aristas frontera de v0
-            let mut aristas_frontera: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
-                                        .filter(|x| x.arista_contiene_vertice(v0))
-                                        .collect();
+            let mut aristas_frontera = self.aristas_por_vertice(v0);
             if aristas_frontera.is_empty()
             {
                 return None;
             }
             // Definimos variables temporales
-            let mut vertice_visitado = v0;
+            let mut vertice_visitado: &Vertice;
+            let mut vertices_visitados: Vec<&Vertice> = vec![v0];
+            // Inicializamos los etiquetados y el contador
             df.add_vertice(v0.clone(), 0);
             let mut i: isize = 1;
+            temp.add_vertice(v0, 0);
+            for adyacente in self.entorno(v0).unwrap().into_iter()
+            {
+                temp.add_vertice(adyacente, i);
+            }
 
             while !aristas_frontera.is_empty() 
             {
-                // Asignamos el etiquetado a los vertices adyacentes
-                let adyacentes = self.entorno(vertice_visitado).unwrap();
-                for adyacente in adyacentes.into_iter()
+                // Seleccionamos la arista frontera cuyo vertice exterior tenga mayor etiquetado
+                let arista_elegida: Vec<&&Arista<Vertice, Peso>> = aristas_frontera.iter()
+                                                    .filter(|x| x.arista_contiene_vertice(temp.max().unwrap().get_vertice()))
+                                                    .collect();                            
+                assert!(arista_elegida.len() == 1);     // TODO: Provisional
+
+                let arista_elegida = *arista_elegida[0];
+
+                arbol.add_aristas(vec![arista_elegida.clone()]);
+                // Establecemos el nuevo vertice visitado
+                if vertices_visitados.contains(&arista_elegida.get_vertices().unwrap().0)
                 {
-                    df.add_vertice(adyacente.clone(), i);
+                    vertice_visitado = arista_elegida.get_vertices().unwrap().1;
                 }
-                
+                else 
+                {
+                    vertice_visitado = arista_elegida.get_vertices().unwrap().0;
+                }
+                vertices_visitados.push(vertice_visitado);
+                df.add_vertice(vertice_visitado.clone(), i);
+                // Incrementamos el contador
+                i += 1;
+                // Asignamos el etiquetado a los vertices adyacentes
+                let adyacentes: Vec<&Vertice> = self.entorno(vertice_visitado).unwrap().into_iter()
+                                            .filter(|x| !vertices_visitados.contains(x))
+                                            .collect();
+                for adyacente in adyacentes.iter()
+                {
+                    match temp.buscar_vertice_mut(adyacente) {
+                        Some(e) => { 
+                            e.set_valor(i);
+                            // Eliminamos la arista antigua
+                            aristas_frontera.retain(|x| !x.arista_contiene_vertice(e.get_vertice()));
+                        },
+                        None => {
+                            temp.add_vertice(adyacente, i);
+                        }
+                    }
+                }                
+                // Actualizamos las aristas frontera
+                let mut extracted = self.aristas_por_vertice(vertice_visitado);
+                aristas_frontera.append(&mut extracted);
+                for vertice in vertices_visitados.iter().filter(|x| **x != vertice_visitado)
+                {
+                    aristas_frontera.retain(|x| !(x.arista_contiene_vertice(vertice)
+                                                                        && x.arista_contiene_vertice(vertice_visitado)));
+                }
             }
 
             Some((Arbol::new(arbol, v0.clone()), df))

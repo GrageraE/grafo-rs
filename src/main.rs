@@ -146,4 +146,30 @@ fn test_arbol_generador_minimo_2()
     assert!(Arista::<i32, isize>::sumatorio_pesos(arbol.get_aristas()).expect("Una arista no tiene peso!!") == 39);
 }
 
+#[test]
+fn test_arbol_profundidad_1()
+{
+    let g: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista(8, 6, None),
+                                                        Arista::arista(6, 2, None),
+                                                        Arista::arista(6, 3, None),
+                                                        Arista::arista(2, 1, None),
+                                                        Arista::arista(3, 1, None),
+                                                        Arista::arista(2, 7, None)].to_vec());
+    
+    println!("El arbol de busqueda por profundidad no es unico. Se imprimira el arbol: ");
+    let prof = g.arbol_profundidad(&8).expect("El arbol debe existir").0.into_grafo();
+    assert!(prof.size() == g.size());
+    for arista in prof.get_aristas().into_iter()
+    {
+        if let Arista::Arista(v, w, _) = arista
+        {
+            println!("Arista: {} -> {}", v, w);
+        }
+        else 
+        {
+            panic!("No deben haber vertices aislados");
+        }
+    }
+}
+
 fn main() {}

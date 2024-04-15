@@ -371,7 +371,7 @@ pub mod grafo_rs
             // Definimos contador para df
             let mut i: isize = 0;
 
-            while i == 0 || !backtrack.is_empty()
+            while arbol.lista_aristas.len() < self.size() - 1
             {
                 // Seleccionamos una arista al azar
                 let mut aristas_vecinas: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()

@@ -197,4 +197,30 @@ fn test_arbol_profundidad_2()
     }
 }
 
+#[test]
+fn test_arbol_profundidad_3()
+{
+    let g: Grafo<i32, NoPeso> = Grafo::from_aristas([Arista::arista(1, 2, None),
+                                                            Arista::arista(2, 3, None),
+                                                            Arista::arista(1, 10, None),
+                                                            Arista::arista(3, 10, None),
+                                                            Arista::arista(10, 4, None),
+                                                            Arista::arista(4, 5, None),
+                                                            Arista::arista(10, 5, None)].to_vec());
+    
+    let prof = g.arbol_profundidad(&10).expect("El arbol debe existir").0.into_grafo();
+    assert!(prof.size() == g.size());
+    for arista in prof.get_aristas().into_iter()
+    {
+        if let Arista::Arista(v, w, _) = arista
+        {
+            println!("Arista: {} -> {}", v, w);
+        }
+        else 
+        {
+            panic!("El arbol solo puede contener aristas");    
+        }
+    }
+}
+
 fn main() {}

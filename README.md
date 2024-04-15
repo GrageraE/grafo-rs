@@ -6,7 +6,7 @@ Implementación de un Grafo en Rust
 
 ### Tests
 
-Para correr los tests unitarios, es necesario desactivar la paralelización y enviar `stdout`. Los tests de arbol en profundidad lo necesitan.
+Para correr los tests unitarios es necesario enviar `stdout`. Los tests de arbol en profundidad lo necesitan.
 ```
-cargo test -j1 -- --nocapture
+cargo test -- --nocapture
 ```

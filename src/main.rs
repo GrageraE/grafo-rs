@@ -223,4 +223,43 @@ fn test_arbol_profundidad_3()
     }
 }
 
+#[test]
+fn test_arbol_profundidad_4()
+{
+    let g: Grafo<char> = Grafo::from_aristas([Arista::arista('A', 'B', None),
+                                                    Arista::arista('B', 'C', None),
+                                                    Arista::arista('A', 'C', None),
+                                                    Arista::arista('C', 'D', None),
+                                                    Arista::arista('D', 'E', None),
+                                                    Arista::arista('E', 'F', None),
+                                                    Arista::arista('D', 'F', None),
+                                                    Arista::arista('D', 'G', None),
+                                                    Arista::arista('F', 'H', None),
+                                                    Arista::arista('H', 'I', None),
+                                                    Arista::arista('G', 'I', None),
+                                                    Arista::arista('I', 'J', None),
+                                                    Arista::arista('J', 'K', None),
+                                                    Arista::arista('K', 'L', None),
+                                                    Arista::arista('K', 'N', None),
+                                                    Arista::arista('N', 'M', None),
+                                                    Arista::arista('M', 'O', None),
+                                                    Arista::arista('O', 'I', None),
+                                                    Arista::arista('I', 'L', None)].to_vec());
+    
+    let prof = g.arbol_profundidad(&'A').expect("El arbol debe existir").0.into_grafo();
+    println!("Se imprimira el arbol");
+    for arista in prof.get_aristas().into_iter()
+    {
+        if let Arista::Arista(v, w, _) = arista
+        {
+            println!("Arista: {} -> {}", v, w);
+        }
+        else 
+        {
+            panic!("Solo deben haber aristas"); 
+        }
+    }
+
+}
+
 fn main() {}

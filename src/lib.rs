@@ -358,6 +358,11 @@ pub mod grafo_rs
             Some(Arbol::<Vertice, Peso>::new(arbol, vertice_inicial.clone()))
         }
 
+        ///
+        /// PRE: Grafo y referencia a Vertice
+        /// POST: Terna de Arbol de busqueda de profundidad con la raiz proporcionada y etiquetado.
+        /// Si la raiz no esta en el grafo, devuelve None
+        /// 
         pub fn arbol_profundidad(&self, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
         {
             let mut arbol = Self::new();

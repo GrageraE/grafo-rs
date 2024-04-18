@@ -4,17 +4,19 @@ pub mod grafo_rs
     pub use arista::arista::NoPeso;
     pub use arista::arista::Arista;
 
+    pub use arista::arista::peso::peso::PesoT;
+
     pub mod etiquetado;
     pub use etiquetado::etiquetado::Etiqueta;
     pub use etiquetado::etiquetado::Etiquetado;
 
     pub struct Grafo<Vertice, Peso = NoPeso> 
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         lista_aristas: Vec<Arista<Vertice, Peso>>,
     }
 
     impl<Vertice, Peso> Grafo<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         /// 
         /// PRE: Cierto
         /// POST: Grafo vacio
@@ -413,10 +415,22 @@ pub mod grafo_rs
 
             Some((Arbol::new(arbol, v0.clone()), df))
         }
+
+        ///
+        /// PRE: Grafo y vertice desde se va a calcular los caminos minimos
+        /// POST: Si el vertice esta en el grafo, terna de Arbol que contiene los caminos minimos y
+        /// etiquetado con las longitudes. None si no pertenece al grafo o si faltan pesos
+        /// NOTA: Implementacion del algoritmo de Dijkstra. Se requiere que Peso implemente un orden parcial
+        /// 
+        pub fn arbol_camino_minimo(&self, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
+        where Peso: PartialOrd
+        {
+            todo!("Falta implementar mejores pesos");
+        }
     }
 
     impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         fn clone(&self) -> Self 
         {
             Self {
@@ -426,14 +440,14 @@ pub mod grafo_rs
     }
 
     pub struct Arbol<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
+    where Vertice: Clone + PartialEq, Peso: PesoT
     {
         grafo: Grafo<Vertice, Peso>,
         raiz: Vertice
     }
 
     impl<Vertice, Peso> Arbol<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
+    where Vertice: Clone + PartialEq, Peso: PesoT
     {        
         pub fn new(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
         {
@@ -461,7 +475,7 @@ pub mod grafo_rs
     }
 
     impl<Vertice, Peso> Clone for Arbol<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq
+    where Vertice: Clone + PartialEq, Peso: PesoT
     {
         fn clone(&self) -> Self {
             Self{

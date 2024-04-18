@@ -1,6 +1,8 @@
 use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::NoPeso;
+use grafo_rs::grafo_rs::PesoT;
+use grafo_rs::grafo_rs::Etiquetado;
 
 #[test]
 fn test_adicion_aristas()

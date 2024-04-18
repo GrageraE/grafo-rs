@@ -201,6 +201,11 @@ pub mod etiquetado
             None
         }
 
+        ///
+        /// PRE: Vertice
+        /// POST: Referencia mutable a etiqueta con el vertice dado, si existe en el etiquetado. None si no existe
+        /// NOTA: Se requiere Etiquetado mutable
+        /// 
         pub fn buscar_vertice_mut(&mut self, v: &Vertice) -> Option<&mut Etiqueta<Vertice>>
         {
             let etiqueta_vertice_index: Vec<usize> = self.datos.iter().enumerate()

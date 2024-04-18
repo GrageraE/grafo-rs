@@ -1,5 +1,9 @@
 pub mod arista
 {
+    pub mod peso;
+
+    use peso::peso::PesoT;
+
     pub struct NoPeso;
 
     impl PartialEq for NoPeso {
@@ -14,14 +18,28 @@ pub mod arista
         }
     }
 
+    impl PesoT for NoPeso {
+        fn elemento_neutro() -> Self {
+            NoPeso
+        }
+
+        fn es_negativo(&self) -> bool {
+            true
+        }
+
+        fn suma(&self, otro: &Self) -> Self {
+            NoPeso
+        }
+    }
+
     pub enum Arista<Vertice, Peso = NoPeso>
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         Arista(Vertice, Vertice, Option<Peso>),
         VerticeAislado(Vertice)
     }
 
     impl<Vertice, Peso> Arista<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         ///
         /// PRE: Dos vertices y un peso opcional
         /// POST: Arista formada por dichos vertices y el peso opcional
@@ -175,7 +193,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> Clone for Arista<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         fn clone(&self) -> Self {
             match &self {
                 Arista::Arista(v, w, p) => 
@@ -186,7 +204,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> PartialEq for Arista<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq {
+    where Vertice: Clone + PartialEq, Peso: PesoT {
         fn eq(&self, other: &Self) -> bool {
             match &self {
                 Self::Arista(v1, w1, p1) => {
@@ -207,7 +225,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> PartialOrd for Arista<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: Clone + PartialEq + PartialOrd
+    where Vertice: Clone + PartialEq, Peso: PesoT + PartialOrd
     {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
             if let Arista::Arista(_, _, p1) = self

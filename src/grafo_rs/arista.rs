@@ -27,7 +27,7 @@ pub mod arista
             true
         }
 
-        fn suma(&self, otro: &Self) -> Self {
+        fn suma(&self, _: &Self) -> Self {
             NoPeso
         }
     }

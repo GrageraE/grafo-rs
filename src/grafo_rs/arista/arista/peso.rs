@@ -19,6 +19,15 @@ pub mod peso
         /// Determinar si el Peso es negativo
         /// 
         fn es_negativo(&self) -> bool;
+
+        ///
+        /// Operacion para convertir a isize para usar etiquetado
+        /// NOTA: Hay disponible una implementacion por defecto
+        /// 
+        fn to_isize(&self) -> isize
+        {
+            0
+        }
     }
 
     impl PesoT for i32
@@ -33,6 +42,10 @@ pub mod peso
 
         fn es_negativo(&self) -> bool {
             self < &0
+        }
+
+        fn to_isize(&self) -> isize {
+            *self as isize
         }
     }
 
@@ -49,6 +62,10 @@ pub mod peso
         fn suma(&self, otro: &Self) -> Self {
             self + otro
         }
+
+        fn to_isize(&self) -> isize {
+            *self as isize
+        }
     }
 
     impl PesoT for usize {
@@ -63,6 +80,10 @@ pub mod peso
         fn es_negativo(&self) -> bool {
             false
         }
+
+        fn to_isize(&self) -> isize {
+            *self as isize
+        }
     }
 
     impl PesoT for isize {
@@ -76,6 +97,10 @@ pub mod peso
 
         fn suma(&self, otro: &Self) -> Self {
             self + otro
+        }
+
+        fn to_isize(&self) -> isize {
+            *self
         }
     }
 }

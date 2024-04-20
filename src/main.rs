@@ -264,4 +264,22 @@ fn test_arbol_profundidad_4()
 
 }
 
+#[test]
+fn test_dijkstra()
+{
+    let g: Grafo<i32, isize> = Grafo::from_aristas([Arista::arista(1, 5, Some(9)),
+                                                            Arista::arista(5, 2, Some(5)),
+                                                            Arista::arista(2, 3, Some(3)),
+                                                            Arista::arista(2, 6, Some(8)),
+                                                            Arista::arista(3, 6, Some(2)),
+                                                            Arista::arista(3, 4, Some(11)),
+                                                            Arista::arista(6, 7, Some(5)),
+                                                            Arista::arista(4, 7, Some(3))].to_vec());
+    let min = g.arbol_camino_minimo(&4).expect("El arbol debe existir");
+    let distancias = min.1;
+    assert_eq!(distancias.buscar_vertice(&4).unwrap().get_valor(), 0);
+    assert_eq!(distancias.buscar_vertice(&3).unwrap().get_valor(), 10);
+    assert_eq!(distancias.buscar_vertice(&2).unwrap().get_valor(), 13);
+}
+
 fn main() {}

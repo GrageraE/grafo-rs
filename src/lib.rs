@@ -305,7 +305,7 @@ pub mod grafo_rs
         /// NOTA: Implementacion del algoritmo de Prim. Requere que el Peso tenga un orden parcial definido
         /// 
         pub fn arbol_peso_minimo(&self) -> Option<Arbol<Vertice, Peso>>
-        where Peso: PartialOrd
+        where Peso: Ord
         {
             let mut arbol = Self::new();
             // Seleccionamos un vertice aleatorio
@@ -423,9 +423,68 @@ pub mod grafo_rs
         /// NOTA: Implementacion del algoritmo de Dijkstra. Se requiere que Peso implemente un orden parcial
         /// 
         pub fn arbol_camino_minimo(&self, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
-        where Peso: PartialOrd
+        where Peso: Ord
         {
-            todo!("Falta implementar mejores pesos");
+            let vertices = self.get_vertices();
+
+            let mut arbol = Self::new();
+            let mut distancia = Etiquetado::new(Some("Distancias"));
+
+            // Variables temporales
+            let mut distancia_temporal: Vec<Option<Peso>> = vec![None; vertices.len()];
+            let mut vertice_visitado = v0;
+            let mut acarreo_visitado = Peso::elemento_neutro();
+            let mut vertices_visitados: Vec<&Vertice> = vec![];
+
+            let pos_raiz = vertices.iter().position(|x| **x == *v0)?;
+            distancia_temporal[pos_raiz] = Some(Peso::elemento_neutro());
+
+            while vertices_visitados.len() < vertices.len() {
+                let aristas_vecinas: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
+                                                    .filter(|x| x.arista_contiene_vertice(vertice_visitado))
+                                                    .filter(|x| !vertices_visitados.contains(&x.other(vertice_visitado).unwrap()))
+                                                    .collect();
+                
+                for arista in aristas_vecinas.iter()
+                {
+                    // Comprobamos si el peso es negativo
+                    if arista.get_peso().unwrap().es_negativo()
+                    {
+                        return None;
+                    }
+                    // Evaluamos las distancias temporales
+                    let otro = arista.other(vertice_visitado).unwrap();
+                    let otro = vertices.iter().position(|x| **x == *otro).unwrap();
+                    let otro = distancia_temporal.get_mut(otro).unwrap();
+                    match otro {
+                        Some(d) => {
+                            let nueva_distancia = acarreo_visitado.suma(arista.get_peso()?);
+                            if *d > nueva_distancia
+                            {
+                                *otro = Some(nueva_distancia);
+                            }
+                        },
+                        None => {
+                            *otro = Some(acarreo_visitado.suma(arista.get_peso()?));
+                        }
+                    }
+                }
+                // Elegimos el vertice con menor distancia y lo añadimos al arbol
+                let menor_distancia = distancia_temporal.iter()
+                                            .filter(|x| x.is_some())
+                                            .enumerate()
+                                            .min_by(|x, y| x.1.cmp(y.1)).unwrap();
+                let menor_distancia = (menor_distancia.0, menor_distancia.1.as_ref().unwrap());
+                vertices_visitados.push(vertice_visitado);
+                vertice_visitado = vertices[menor_distancia.0];
+                distancia.add_vertice(vertice_visitado.clone(), menor_distancia.1.to_isize());
+                acarreo_visitado = acarreo_visitado.suma(menor_distancia.1);
+                let min_arista = aristas_vecinas.into_iter()
+                                    .filter(|x: &&Arista<Vertice, Peso>| x.arista_contiene_vertice(vertice_visitado))
+                                    .nth(0).unwrap();
+                arbol.add_aristas(vec![min_arista.clone()]);
+            }
+            Some((Arbol::new(arbol, v0.clone()), distancia))
         }
     }
 

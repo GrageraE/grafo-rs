@@ -434,10 +434,9 @@ pub mod grafo_rs
             let mut distancia_temporal: Vec<Option<Peso>> = vec![None; vertices.len()];
             let mut vertice_visitado = v0;
             let mut acarreo_visitado = Peso::elemento_neutro();
-            let mut vertices_visitados: Vec<&Vertice> = vec![];
+            let mut vertices_visitados: Vec<&Vertice> = vec![v0];
 
-            let pos_raiz = vertices.iter().position(|x| **x == *v0)?;
-            distancia_temporal[pos_raiz] = Some(Peso::elemento_neutro());
+            let _ = vertices.iter().position(|x| **x == *v0)?;
 
             while vertices_visitados.len() < vertices.len() {
                 let aristas_vecinas: Vec<&Arista<Vertice, Peso>> = self.lista_aristas.iter()
@@ -471,19 +470,23 @@ pub mod grafo_rs
                 }
                 // Elegimos el vertice con menor distancia y lo añadimos al arbol
                 let menor_distancia = distancia_temporal.iter()
-                                            .filter(|x| x.is_some())
                                             .enumerate()
+                                            .filter(|x| x.1.is_some())
                                             .min_by(|x, y| x.1.cmp(y.1)).unwrap();
                 let menor_distancia = (menor_distancia.0, menor_distancia.1.as_ref().unwrap());
                 vertices_visitados.push(vertice_visitado);
                 vertice_visitado = vertices[menor_distancia.0];
                 distancia.add_vertice(vertice_visitado.clone(), menor_distancia.1.to_isize());
-                acarreo_visitado = acarreo_visitado.suma(menor_distancia.1);
+                acarreo_visitado = menor_distancia.1.clone();
                 let min_arista = aristas_vecinas.into_iter()
                                     .filter(|x: &&Arista<Vertice, Peso>| x.arista_contiene_vertice(vertice_visitado))
                                     .nth(0).unwrap();
                 arbol.add_aristas(vec![min_arista.clone()]);
+                // Lo quitamos del vector de distancia temporal
+                let menor_distancia_pos = menor_distancia.0;
+                distancia_temporal[menor_distancia_pos] = None;
             }
+            distancia.add_vertice(v0.clone(), 0);
             Some((Arbol::new(arbol, v0.clone()), distancia))
         }
     }

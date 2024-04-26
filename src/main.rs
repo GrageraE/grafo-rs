@@ -2,6 +2,10 @@ use grafo_rs::grafo_rs::Grafo;
 use grafo_rs::grafo_rs::Arista;
 use grafo_rs::grafo_rs::NoPeso;
 use grafo_rs::grafo_rs::PesoT;
+
+use grafo_rs::grafo_rs::arbol_camino_minimo;
+use grafo_rs::grafo_rs::arbol_peso_minimo;
+use grafo_rs::grafo_rs::arbol_profundidad;
 use grafo_rs::grafo_rs::Etiquetado;
 
 #[test]
@@ -106,7 +110,7 @@ fn test_arbol_generador_minimo_1()
                                                          Arista::arista(1, 4, Some(1))   
                                                             ].to_vec());
     
-    let arbol = g.arbol_peso_minimo().expect("Arbol generador no producido").into_grafo();
+    let arbol = arbol_peso_minimo(&g).expect("Arbol generador no producido").into_grafo();
     let entorno_1 = arbol.entorno(&1).expect("Entorno de 1 no existe");
     assert!(entorno_1.contains(&&2));
     assert!(entorno_1.contains(&&4));
@@ -133,7 +137,7 @@ fn test_arbol_generador_minimo_2()
                                                         Arista::arista(5, 6, Some(8)),
                                                         Arista::arista(6, 7, Some(11)),
                                                         Arista::arista(5, 7, Some(9))].to_vec());
-    let arbol = g.arbol_peso_minimo().expect("El arbol no existe").into_grafo();
+    let arbol = arbol_peso_minimo(&g).expect("El arbol no existe").into_grafo();
     
     let entorno_1 = arbol.entorno(&1).expect("El vertice 1 no esta en el arbol");
     assert!(entorno_1.len() == 2);
@@ -159,7 +163,7 @@ fn test_arbol_profundidad_1()
                                                         Arista::arista(2, 7, None)].to_vec());
     
     println!("El arbol de busqueda por profundidad no es unico. Se imprimira el arbol: ");
-    let prof = g.arbol_profundidad(&8).expect("El arbol debe existir").0.into_grafo();
+    let prof = arbol_profundidad(&g, &8).expect("El arbol debe existir").0.into_grafo();
     assert!(prof.size() == g.size());
     for arista in prof.get_aristas().into_iter()
     {
@@ -184,7 +188,7 @@ fn test_arbol_profundidad_2()
                                                             Arista::arista(4, 5, None),
                                                             Arista::vertice(10)].to_vec());
     println!("El arbol de busqueda se imprimira:");
-    let prof = g.arbol_profundidad(&1).expect("El arbol debe existir").0.into_grafo();
+    let prof = arbol_profundidad(&g, &1).expect("El arbol debe existir").0.into_grafo();
     assert!(prof.size() == g.size() - 1);
     for arista in prof.get_aristas().into_iter()
     {
@@ -210,7 +214,7 @@ fn test_arbol_profundidad_3()
                                                             Arista::arista(4, 5, None),
                                                             Arista::arista(10, 5, None)].to_vec());
     
-    let prof = g.arbol_profundidad(&10).expect("El arbol debe existir").0.into_grafo();
+    let prof = arbol_profundidad(&g, &10).expect("El arbol debe existir").0.into_grafo();
     assert!(prof.size() == g.size());
     for arista in prof.get_aristas().into_iter()
     {
@@ -248,7 +252,7 @@ fn test_arbol_profundidad_4()
                                                     Arista::arista('O', 'I', None),
                                                     Arista::arista('I', 'L', None)].to_vec());
     
-    let prof = g.arbol_profundidad(&'A').expect("El arbol debe existir").0.into_grafo();
+    let prof = arbol_profundidad(&g, &'A').expect("El arbol debe existir").0.into_grafo();
     println!("Se imprimira el arbol");
     for arista in prof.get_aristas().into_iter()
     {
@@ -275,7 +279,7 @@ fn test_dijkstra()
                                                             Arista::arista(3, 4, Some(11)),
                                                             Arista::arista(6, 7, Some(5)),
                                                             Arista::arista(4, 7, Some(3))].to_vec());
-    let min = g.arbol_camino_minimo(&4).expect("El arbol debe existir");
+    let min = arbol_camino_minimo(&g, &4).expect("El arbol debe existir");
     let distancias = min.1;
     assert_eq!(distancias.buscar_vertice(&4).unwrap().get_valor(), 0);
     assert_eq!(distancias.buscar_vertice(&3).unwrap().get_valor(), 10);

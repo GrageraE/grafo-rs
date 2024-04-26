@@ -2,7 +2,7 @@ pub mod arista
 {
     pub mod peso;
 
-    use peso::peso::PesoT;
+    pub use peso::peso::PesoT;
 
     pub struct NoPeso;
 

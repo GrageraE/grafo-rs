@@ -269,7 +269,7 @@ fn test_arbol_profundidad_4()
 }
 
 #[test]
-fn test_dijkstra()
+fn test_dijkstra_1()
 {
     let g: Grafo<i32, isize> = Grafo::from_aristas([Arista::arista(1, 5, Some(9)),
                                                             Arista::arista(5, 2, Some(5)),
@@ -284,6 +284,25 @@ fn test_dijkstra()
     assert_eq!(distancias.buscar_vertice(&4).unwrap().get_valor(), 0);
     assert_eq!(distancias.buscar_vertice(&3).unwrap().get_valor(), 10);
     assert_eq!(distancias.buscar_vertice(&2).unwrap().get_valor(), 13);
+}
+
+#[test]
+fn test_dijkstra_2()
+{
+    let g: Grafo<char, usize> = Grafo::from_aristas([Arista::arista('A', 'B', Some(3)),
+                                                            Arista::arista('A', 'C', Some(1)),
+                                                            Arista::arista('B', 'C', Some(7)),
+                                                            Arista::arista('B', 'E', Some(1)),
+                                                            Arista::arista('B', 'D', Some(5)),
+                                                            Arista::arista('C', 'D', Some(2)),
+                                                            Arista::arista('D', 'E', Some(7))].to_vec());
+
+    let min = arbol_camino_minimo(&g, &'C').expect("El arbol debe existir");
+    let distancias = min.1;
+    assert_eq!(distancias.buscar_vertice(&'A').unwrap().get_valor(), 1);
+    assert_eq!(distancias.buscar_vertice(&'B').unwrap().get_valor(), 4);
+    assert_eq!(distancias.buscar_vertice(&'D').unwrap().get_valor(), 2);
+    assert_eq!(distancias.buscar_vertice(&'E').unwrap().get_valor(), 5);
 }
 
 fn main() {}

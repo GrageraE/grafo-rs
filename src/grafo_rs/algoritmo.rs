@@ -142,7 +142,7 @@ pub mod algoritmo
         let mut distancia = Etiquetado::new(Some("Distancias"));
 
         // Variables temporales
-        let mut distancia_temporal: Vec<Option<Peso>> = vec![None; vertices.len()];
+        let mut distancia_temporal: Vec<(Option<Peso>, &Vertice)> = vec![(None, v0); vertices.len()];
         let mut vertice_visitado = v0;
         let mut acarreo_visitado = Peso::elemento_neutro();
         let mut vertices_visitados: Vec<&Vertice> = vec![v0];
@@ -158,7 +158,7 @@ pub mod algoritmo
             for arista in aristas_vecinas.iter()
             {
                 // Comprobamos si el peso es negativo
-                if arista.get_peso().unwrap().es_negativo()
+                if arista.get_peso()?.es_negativo()
                 {
                     return None;
                 }
@@ -166,36 +166,38 @@ pub mod algoritmo
                 let otro = arista.other(vertice_visitado).unwrap();
                 let otro = vertices.iter().position(|x| **x == *otro).unwrap();
                 let otro = distancia_temporal.get_mut(otro).unwrap();
-                match otro {
+                match &otro.0 {
                     Some(d) => {
                         let nueva_distancia = acarreo_visitado.suma(arista.get_peso()?);
-                        if *d > nueva_distancia
+                        if d > &nueva_distancia
                         {
-                            *otro = Some(nueva_distancia);
+                            otro.0 = Some(nueva_distancia);
+                            otro.1 = vertice_visitado;
                         }
                     },
                     None => {
-                        *otro = Some(acarreo_visitado.suma(arista.get_peso()?));
+                        otro.0 = Some(acarreo_visitado.suma(arista.get_peso()?));
+                        otro.1 = vertice_visitado;
                     }
                 }
             }
             // Elegimos el vertice con menor distancia y lo añadimos al arbol
             let menor_distancia = distancia_temporal.iter()
                                         .enumerate()
-                                        .filter(|x| x.1.is_some())
-                                        .min_by(|x, y| x.1.cmp(y.1)).unwrap();
-            let menor_distancia = (menor_distancia.0, menor_distancia.1.as_ref().unwrap());
+                                        .filter(|x| x.1.0.is_some())
+                                        .min_by(|x, y| x.1.0.cmp(&y.1.0)).unwrap();
+            let menor_distancia = (menor_distancia.0, menor_distancia.1.0.as_ref().unwrap(), menor_distancia.1.1);
             vertices_visitados.push(vertice_visitado);
             vertice_visitado = vertices[menor_distancia.0];
             distancia.add_vertice(vertice_visitado.clone(), menor_distancia.1.to_isize());
             acarreo_visitado = menor_distancia.1.clone();
-            let min_arista = aristas_vecinas.into_iter()
-                                .filter(|x: &&Arista<Vertice, Peso>| x.arista_contiene_vertice(vertice_visitado))
-                                .nth(0).unwrap();
+            let min_arista = grafo.get_aristas().iter()
+                                .filter(|x| x.arista_contiene_vertice(vertice_visitado) && x.arista_contiene_vertice(menor_distancia.2))
+                                .min_by(|x, y| x.get_peso().cmp(&y.get_peso())).unwrap();
             arbol.add_aristas(vec![min_arista.clone()]);
             // Lo quitamos del vector de distancia temporal
             let menor_distancia_pos = menor_distancia.0;
-            distancia_temporal[menor_distancia_pos] = None;
+            distancia_temporal[menor_distancia_pos] = (None, v0);
         }
         distancia.add_vertice(v0.clone(), 0);
         Some((Arbol::new(arbol, v0.clone()), distancia))

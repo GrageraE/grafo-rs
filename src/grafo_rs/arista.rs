@@ -1,19 +1,19 @@
 pub mod arista
 {
-    pub mod peso;
+    use crate::grafo_rs::PesoT;
+    use crate::grafo_rs::NoPeso;
 
-    pub use peso::peso::PesoT;
-
-    pub use peso::peso::NoPeso;
+    use crate::grafo_rs::AristaT;
+    use crate::grafo_rs::VerticeT;
 
     pub enum Arista<Vertice, Peso = NoPeso>
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         Arista(Vertice, Vertice, Option<Peso>),
         VerticeAislado(Vertice)
     }
 
     impl<Vertice, Peso> Arista<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         ///
         /// PRE: Dos vertices y un peso opcional
         /// POST: Arista formada por dichos vertices y el peso opcional
@@ -167,7 +167,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> Clone for Arista<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         fn clone(&self) -> Self {
             match &self {
                 Arista::Arista(v, w, p) => 
@@ -178,7 +178,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> PartialEq for Arista<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         fn eq(&self, other: &Self) -> bool {
             match &self {
                 Self::Arista(v1, w1, p1) => {
@@ -199,7 +199,7 @@ pub mod arista
     }
 
     impl<Vertice, Peso> PartialOrd for Arista<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: PesoT + PartialOrd
+    where Vertice: VerticeT, Peso: PesoT + PartialOrd
     {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
             if let Arista::Arista(_, _, p1) = self

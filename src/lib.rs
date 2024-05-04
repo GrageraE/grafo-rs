@@ -14,6 +14,27 @@ pub mod grafo_rs
     pub use grafo::grafo::Arbol;
 
     ///
+    /// Modulo Arista_T. Componentes:
+    ///     AristaT: caracteristica comun que deben cumplir las aristas
+    /// 
+    pub mod arista_t;
+    pub use arista_t::arista_t::AristaT;
+
+    ///
+    /// Submodulo Peso de Arista_T. Componentes:
+    ///     PesoT: caracteristica que debe cumplir la ponderacion
+    ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
+    /// 
+    pub use arista_t::arista_t::PesoT;
+    pub use arista_t::arista_t::NoPeso;
+
+    ///
+    /// Submodulo Vertice de Arista_T. Componentes:
+    ///     VerticeT: caracteristica que deben cumplir los vertices
+    /// 
+    pub use arista_t::arista_t::VerticeT;
+
+    ///
     /// Modulo Arista. Componentes:
     ///     Arista: enumerador que representa una arista del grafo
     /// 
@@ -21,12 +42,9 @@ pub mod grafo_rs
     pub use arista::arista::Arista;
 
     ///
-    /// Submodulo Peso. Componentes:
-    ///     PesoT: caracteristica que debe cumplir la ponderacion
-    ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
+    /// Modulo Diarista
     /// 
-    pub use arista::arista::PesoT;
-    pub use arista::arista::NoPeso;
+    pub mod diarista;
 
     ///
     /// Modulo Algoritmo.

@@ -2,17 +2,20 @@ pub mod grafo
 {
     use crate::grafo_rs::Arista;
     use crate::grafo_rs::NoPeso;
+
     use crate::grafo_rs::PesoT;
+    use crate::grafo_rs::VerticeT;
+    use crate::grafo_rs::AristaT;
 
     mod tests;
 
     pub struct Grafo<Vertice, Peso = NoPeso> 
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         lista_aristas: Vec<Arista<Vertice, Peso>>,
     }
 
     impl<Vertice, Peso> Grafo<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         /// 
         /// PRE: Cierto
         /// POST: Grafo vacio
@@ -298,7 +301,7 @@ pub mod grafo
     }
 
     impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: PesoT {
+    where Vertice: VerticeT, Peso: PesoT {
         fn clone(&self) -> Self 
         {
             Self {
@@ -308,14 +311,14 @@ pub mod grafo
     }
 
     pub struct Arbol<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: PesoT
+    where Vertice: VerticeT, Peso: PesoT
     {
         grafo: Grafo<Vertice, Peso>,
         raiz: Vertice
     }
 
     impl<Vertice, Peso> Arbol<Vertice, Peso> 
-    where Vertice: Clone + PartialEq, Peso: PesoT
+    where Vertice: VerticeT, Peso: PesoT
     {        
         pub fn new(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
         {
@@ -343,7 +346,7 @@ pub mod grafo
     }
 
     impl<Vertice, Peso> Clone for Arbol<Vertice, Peso>
-    where Vertice: Clone + PartialEq, Peso: PesoT
+    where Vertice: VerticeT, Peso: PesoT
     {
         fn clone(&self) -> Self {
             Self{

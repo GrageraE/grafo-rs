@@ -10,9 +10,12 @@ pub mod arista_t
     
     pub use vertice::vertice::VerticeT;
 
-    pub trait AristaT
+    ///
+    /// Trait que define operaciones comunes para las aristas
+    /// 
+    pub trait AristaT<Vertice, Peso> : Clone + PartialEq
+    where Vertice: VerticeT, Peso: PesoT
     {
-        fn arista()
     }
 
 }

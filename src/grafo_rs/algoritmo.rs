@@ -4,8 +4,10 @@ pub mod algoritmo
     use crate::grafo_rs::Arbol;
 
     use crate::grafo_rs::Arista;
+    use crate::grafo_rs::AristaT;
     
     use crate::grafo_rs::PesoT;
+    use crate::grafo_rs::VerticeT;
     
     use crate::grafo_rs::Etiquetado;
     
@@ -17,7 +19,7 @@ pub mod algoritmo
     /// NOTA: Implementacion del algoritmo de Prim. Requere que el Peso tenga un orden parcial definido
     /// 
     pub fn arbol_peso_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>) -> Option<Arbol<Vertice, Peso>>
-    where Vertice: Clone + PartialEq, Peso: PesoT + Ord
+    where Vertice: VerticeT, Peso: PesoT + Ord
     {
         let mut arbol = Grafo::new();
         // Seleccionamos un vertice aleatorio
@@ -78,7 +80,7 @@ pub mod algoritmo
     /// Si la raiz no esta en el grafo, devuelve None
     /// 
     pub fn arbol_profundidad<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
-    where Vertice: Clone + PartialEq, Peso: PesoT
+    where Vertice: VerticeT, Peso: PesoT
     {
         let mut arbol = Grafo::new();
         let mut df = Etiquetado::new(Some("df"));
@@ -136,7 +138,7 @@ pub mod algoritmo
     /// NOTA: Implementacion del algoritmo de Dijkstra. Se requiere que Peso implemente un orden parcial
     /// 
     pub fn arbol_camino_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
-    where Vertice: Clone + PartialEq, Peso: PesoT + Ord
+    where Vertice: VerticeT, Peso: PesoT + Ord
     {
         let vertices = grafo.get_vertices();
 

@@ -69,11 +69,11 @@ pub mod arista_t
             let (v1, v2) = self.get_vertices()?;
             if v == v1
             {
-                return Some(v1);
+                return Some(v2);
             }
             if v == v2
             {
-                return Some(v2);
+                return Some(v1);
             }
             None
         }

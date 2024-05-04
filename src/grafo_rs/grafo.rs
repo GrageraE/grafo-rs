@@ -4,6 +4,8 @@ pub mod grafo
     use crate::grafo_rs::NoPeso;
     use crate::grafo_rs::PesoT;
 
+    mod tests;
+
     pub struct Grafo<Vertice, Peso = NoPeso> 
     where Vertice: Clone + PartialEq, Peso: PesoT {
         lista_aristas: Vec<Arista<Vertice, Peso>>,

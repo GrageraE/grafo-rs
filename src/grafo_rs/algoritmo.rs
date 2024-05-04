@@ -9,6 +9,8 @@ pub mod algoritmo
     
     use crate::grafo_rs::Etiquetado;
     
+    mod tests;
+    
     ///
     /// PRE: Cierto
     /// POST: Arbol generador de peso minimo

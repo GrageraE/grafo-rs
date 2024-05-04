@@ -6,7 +6,7 @@ pub mod peso
     pub trait PesoT: Clone + PartialEq
     {
         ///
-        /// Elemento neutro del Peso
+        /// Elemento neutro para la suma del Peso
         /// 
         fn elemento_neutro() -> Self;
 

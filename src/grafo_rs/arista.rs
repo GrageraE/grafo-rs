@@ -130,7 +130,7 @@ pub mod arista
         /// NOTA: Requiere que el Peso tenga un orden parcial definido. Puede usarse la funcion peso_por_defecto.
         /// 
         // TODO: Mejorar modelo de ownership de aristas para evitar copias innecesarias
-        pub fn min_aristas(aristas: Vec<&Arista<Vertice, Peso>>) -> Option<&Arista<Vertice, Peso>>
+        pub fn min_aristas(aristas: Vec<&Self>) -> Option<&Self>
         where Peso: PartialOrd
         {
             let mut res = aristas.get(0)?;
@@ -153,16 +153,17 @@ pub mod arista
         /// PRE: Vector con referencias a Aristas con Peso = isize
         /// POST: Si todas tienen peso devuelve la suma de los pesos. None eoc
         /// 
-        pub fn sumatorio_pesos(aristas: &Vec<Arista<Vertice, isize>>) -> Option<isize>
+        pub fn sumatorio_pesos(aristas: &Vec<Self>) -> Peso
         {
-            aristas.iter().filter(|x| {
-                match x {
-                    Arista::Arista(_, _, _) => true,
-                    _ => false
-                }
-            })
-            .map(|x| x.get_peso())
-            .sum()
+            let pesos: Vec<&Peso> = aristas.into_iter()
+                    .filter_map(|x| x.get_peso())
+                    .collect();
+            let mut suma = Peso::elemento_neutro();
+            for peso in pesos.into_iter()
+            {
+                suma = suma.suma(peso);
+            }
+            suma
         }
     }
 

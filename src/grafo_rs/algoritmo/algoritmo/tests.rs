@@ -56,7 +56,7 @@ mod tests
         assert!(entorno_6 == vec![&4]);
         
         // Comprobar el peso del arbol
-        assert!(Arista::<i32, isize>::sumatorio_pesos(arbol.get_aristas()).expect("Una arista no tiene peso!!") == 39);
+        assert!(Arista::<i32, isize>::sumatorio_pesos(arbol.get_aristas()) == 39);
     }
 
     #[test]

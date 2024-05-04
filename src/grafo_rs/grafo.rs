@@ -1,11 +1,6 @@
 pub mod grafo
 {
-    use crate::grafo_rs::Arista;
-    use crate::grafo_rs::NoPeso;
-
-    use crate::grafo_rs::PesoT;
-    use crate::grafo_rs::VerticeT;
-    use crate::grafo_rs::AristaT;
+    use crate::grafo_rs::{Arista, AristaT, NoPeso, PesoT, VerticeT};
 
     mod tests;
 

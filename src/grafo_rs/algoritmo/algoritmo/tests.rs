@@ -1,12 +1,9 @@
 #[cfg(test)]
 mod tests
 {
-    use super::super::Grafo;
-    use super::super::Arista;
-    use crate::grafo_rs::NoPeso;
-    use super::super::arbol_camino_minimo;
-    use super::super::arbol_peso_minimo;
-    use super::super::arbol_profundidad;
+    use super::super::{Arista, Grafo};
+    use crate::grafo_rs::{NoPeso, AristaT};
+    use super::super::{arbol_camino_minimo, arbol_peso_minimo, arbol_profundidad};
 
     #[test]
     fn test_arbol_generador_minimo_1()

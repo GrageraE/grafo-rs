@@ -2,9 +2,7 @@ pub mod arista_t
 {
     pub mod peso;
 
-    pub use peso::peso::PesoT;
-
-    pub use peso::peso::NoPeso;
+    pub use peso::peso::{NoPeso, PesoT};
 
     pub mod vertice;
     
@@ -32,11 +30,15 @@ pub mod arista_t
         fn vertice(v: Vertice) -> Self;
 
         ///
-        /// Funcion miembro de la Arista. Si es una arista, devuleve otra con peso por defecto de tipo u8.
+        /// PRE: Arista
+        /// POST: Una arista formada por los vertices de la anterior con peso = elemento neutro, si es arista. 
         /// None eoc
         /// 
-        fn peso_por_defecto<T>(&self) -> Option<T>
-        where T: AristaT<Vertice, u8>;
+        fn peso_por_defecto(&self) -> Option<Self>
+        {
+            let (v1, v2) = self.get_vertices()?;
+            Some(Self::arista(v1.clone(), v2.clone(), Some(Peso::elemento_neutro())))
+        }
 
         ///
         /// Funcion miembro. Devuelve true si es una arista y tiene como extremo v0. False eoc

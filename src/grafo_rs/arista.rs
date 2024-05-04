@@ -4,33 +4,7 @@ pub mod arista
 
     pub use peso::peso::PesoT;
 
-    pub struct NoPeso;
-
-    impl PartialEq for NoPeso {
-        fn eq(&self, _: &Self) -> bool {
-            true
-        }
-    }
-
-    impl Clone for NoPeso {
-        fn clone(&self) -> Self {
-            Self
-        }
-    }
-
-    impl PesoT for NoPeso {
-        fn elemento_neutro() -> Self {
-            NoPeso
-        }
-
-        fn es_negativo(&self) -> bool {
-            true
-        }
-
-        fn suma(&self, _: &Self) -> Self {
-            NoPeso
-        }
-    }
+    pub use peso::peso::NoPeso;
 
     pub enum Arista<Vertice, Peso = NoPeso>
     where Vertice: Clone + PartialEq, Peso: PesoT {

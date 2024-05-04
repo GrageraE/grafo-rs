@@ -16,17 +16,17 @@ pub mod grafo_rs
     ///
     /// Modulo Arista. Componentes:
     ///     Arista: enumerador que representa una arista del grafo
-    ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
     /// 
     pub mod arista;
-    pub use arista::arista::NoPeso;
     pub use arista::arista::Arista;
 
     ///
     /// Submodulo Peso. Componentes:
     ///     PesoT: caracteristica que debe cumplir la ponderacion
+    ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
     /// 
     pub use arista::arista::PesoT;
+    pub use arista::arista::NoPeso;
 
     ///
     /// Modulo Algoritmo.

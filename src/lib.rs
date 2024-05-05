@@ -14,6 +14,13 @@ pub mod grafo_rs
     pub use grafo::grafo::Arbol;
 
     ///
+    /// Modulo Digrafo. Componentes:
+    ///     Digrafo: estructura que representa un Digrafo
+    /// 
+    pub mod digrafo;
+    pub use digrafo::digrafo::Digrafo;
+
+    ///
     /// Modulo Arista_T. Componentes:
     ///     AristaT: caracteristica comun que deben cumplir las aristas
     /// 
@@ -42,9 +49,11 @@ pub mod grafo_rs
     pub use arista::arista::Arista;
 
     ///
-    /// Modulo Diarista
+    /// Modulo Diarista. Componentes:
+    ///     Diarista: enumerador que representa una arista dirigida del grafo
     /// 
     pub mod diarista;
+    pub use diarista::diarista::Diarista;
 
     ///
     /// Modulo Algoritmo.

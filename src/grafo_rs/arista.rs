@@ -1,11 +1,23 @@
 pub mod arista
 {
-    use crate::grafo_rs::{AristaT, NoPeso, PesoT, VerticeT};
+    use crate::grafo_rs::{AristaT, NoPeso, PesoT, VerticeT, Diarista};
 
     pub enum Arista<Vertice, Peso = NoPeso>
     where Vertice: VerticeT, Peso: PesoT {
         Arista(Vertice, Vertice, Option<Peso>),
         VerticeAislado(Vertice)
+    }
+
+    impl<Vertice, Peso> Arista<Vertice, Peso>
+    where Vertice: VerticeT, Peso: PesoT
+    {
+        pub fn into_diarista(self) -> Diarista<Vertice, Peso>
+        {
+            match self {
+                Self::Arista(u, v, p) => Diarista::arista(u, v, p),
+                Self::VerticeAislado(u) => Diarista::vertice(u)
+            }
+        }
     }
 
     impl<Vertice, Peso> AristaT<Vertice, Peso> for Arista<Vertice, Peso> 
@@ -107,6 +119,7 @@ pub mod arista
                 Self::Arista(v1, w1, p1) => {
                     if let Self::Arista(v2, w2, p2) = other
                     {
+                        // La arista es simetrica: el orden en el que aparecen los vertices puede ser distinto
                         return (v1 == v2 && w1 == w2 && p1 == p2) || (v1 == w2 && v2 == w1 && p1 == p2);
                     }
                 },

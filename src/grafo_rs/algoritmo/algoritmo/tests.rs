@@ -3,7 +3,16 @@ mod tests
 {
     use super::super::{Arista, Grafo};
     use crate::grafo_rs::{NoPeso, AristaT, GrafoT};
-    use super::super::{arbol_camino_minimo, arbol_peso_minimo, arbol_profundidad};
+    use super::super::{arbol_camino_minimo, arbol_peso_minimo, 
+                    arbol_profundidad, comprobar_sucesion};
+
+    #[test]
+    fn test_sucesion_grafica()
+    {
+        assert!(comprobar_sucesion(&vec![2, 1, 1]));
+        assert!(!comprobar_sucesion(&vec![2, 1, 0]));
+        assert!(comprobar_sucesion(&vec![4, 4, 3, 2, 2, 2, 1]));
+    }
 
     #[test]
     fn test_arbol_generador_minimo_1()

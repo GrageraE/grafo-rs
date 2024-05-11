@@ -87,13 +87,4 @@ mod tests
 
         assert_eq!(vec![2, 1, 1, 0], grafo0.sucesion_grados());
     }
-
-    #[test]
-    fn test_sucesion_grafica()
-    {
-        assert!(Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 1]));
-        assert!(!Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![2, 1, 0]));
-        assert!(Grafo::<i32, NoPeso>::comprobar_sucesion(&vec![4, 4, 3, 2, 2, 2, 1]));
-    }
-
 }

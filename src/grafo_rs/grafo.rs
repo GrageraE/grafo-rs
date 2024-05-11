@@ -156,44 +156,6 @@ pub mod grafo
         }
     }
 
-    impl<Vertice, Peso> Grafo<Vertice, Peso>
-    where Vertice: VerticeT, Peso: PesoT
-    {
-        ///
-        /// PRE: Sucesion de numeros enteros decreciente
-        /// POST: Devuelve cierto en caso de ser sucesion grafica, eoc falso
-        /// NOTA: Se implementa usando el Teorema de Havel-Hakimi
-        /// 
-        pub fn comprobar_sucesion(sucesion: &Vec<isize>) -> bool
-        {            
-            let mut sucesion = sucesion.clone();
-            if sucesion.len() == 0 { return false; }
-            sucesion.sort_by(|g1, g2| g2.cmp(g1));
-            if sucesion[0] >= sucesion.len().try_into().unwrap() { return false; }
-
-            while sucesion[0] > 0
-            {
-                let first = sucesion[0];
-                // Costruimos un nuevo vector
-                sucesion = sucesion.iter().enumerate().map(|(i, e)| {
-                    if i > 0 && i <= first.try_into().unwrap()
-                    { return *e - 1;}
-                    *e
-                }).collect();
-                sucesion.remove(0);
-                sucesion.sort_by(|g1, g2| g2.cmp(g1));
-            }
-            match sucesion.last() {
-                Some(e) => match e.cmp(&0) {
-                    std::cmp::Ordering::Less => false,
-                    std::cmp::Ordering::Equal => true,
-                    std::cmp::Ordering::Greater => { panic!("sucesion.last mayor que 0 !!"); }
-                },
-                None => false
-            }
-        }
-    }
-
     impl<Vertice, Peso> Clone for Grafo<Vertice, Peso>
     where Vertice: VerticeT, Peso: PesoT {
         fn clone(&self) -> Self 

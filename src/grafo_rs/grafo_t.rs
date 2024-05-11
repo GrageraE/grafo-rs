@@ -5,6 +5,9 @@ pub mod grafo_t
     pub trait GrafoT<Vertice, Peso, Arista>
     where Vertice: VerticeT, Peso: PesoT, Arista: AristaT<Vertice, Peso>
     {
+        ///
+        /// Crea un nuevo Grafo vacio
+        /// 
         fn new() -> Self;
 
         ///
@@ -16,18 +19,39 @@ pub mod grafo_t
             self.get_vertices().len()
         }
 
+        ///
+        /// Crea un grafo a partir de un vector de aristas
+        /// 
         fn from_aristas(lista: Vec<Arista>) -> Self;
 
+        ///
+        /// Añade aristas al grafo
+        /// 
         fn add_aristas(&mut self, lista: Vec<Arista>);
 
+        ///
+        /// Añade vertices al grafo
+        /// 
         fn add_vertices(&mut self, lista: Vec<Vertice>);
 
+        ///
+        /// Devuelve la lista de aristas del grafo
+        /// 
         fn get_aristas(&self) -> &Vec<Arista>;
 
+        ///
+        /// Devuelve la lista de vertices del grafo
+        /// 
         fn get_vertices(&self) -> Vec<&Vertice>;
 
+        ///
+        /// Elimina la arista proporcionada del grafo
+        /// 
         fn remove_arista(&mut self, e: &Arista);
 
+        ///
+        /// Elimina el vertice proporcionado del grafo
+        /// 
         fn remove_vertice(&mut self, v: &Vertice);
 
         ///

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests
 {
-    use super::super::{Arista, AristaT, Grafo, NoPeso};
+    use super::super::{Arista, AristaT, Grafo, GrafoT, NoPeso};
     
     #[test]
     fn test_adicion_aristas()

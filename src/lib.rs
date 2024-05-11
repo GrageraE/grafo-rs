@@ -5,6 +5,13 @@
 pub mod grafo_rs
 {
     ///
+    ///  Modulo Grafo_T. Componentes:
+    ///     GrafoT: caracteristica comun de grafo
+    /// 
+    pub mod grafo_t;
+    pub use grafo_t::grafo_t::GrafoT;
+
+    ///
     /// Modulo Grafo. Componentes:
     ///     Grafo: estructura que representa un Grafo
     ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol

@@ -1,6 +1,8 @@
 pub mod algoritmo
 {
-    use crate::grafo_rs::{Arbol, Grafo, Arista, AristaT, PesoT, VerticeT, Etiquetado};
+    use crate::grafo_rs::{Arbol, Grafo, Arista, 
+                        AristaT, PesoT, VerticeT, GrafoT,
+                        Etiquetado};
     
     mod tests;
     

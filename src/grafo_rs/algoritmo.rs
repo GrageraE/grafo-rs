@@ -98,7 +98,7 @@ pub mod algoritmo
             }
         }
 
-        Some(Arbol::<Vertice, Peso>::new(arbol, vertice_inicial.clone()))
+        Some(Arbol::<Vertice, Peso>::from_grafo(arbol, vertice_inicial.clone()))
     }
 
     ///
@@ -155,7 +155,7 @@ pub mod algoritmo
             }
         }
 
-        Some((Arbol::new(arbol, v0.clone()), df))
+        Some((Arbol::from_grafo(arbol, v0.clone()), df))
     }
 
     ///
@@ -231,6 +231,6 @@ pub mod algoritmo
             distancia_temporal[menor_distancia_pos] = (None, v0);
         }
         distancia.add_vertice(v0.clone(), 0);
-        Some((Arbol::new(arbol, v0.clone()), distancia))
+        Some((Arbol::from_grafo(arbol, v0.clone()), distancia))
     }
 }

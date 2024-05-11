@@ -2,6 +2,9 @@ pub mod grafo_t
 {
     use crate::grafo_rs::{AristaT, VerticeT, PesoT};
 
+    ///
+    /// Trait que define las operaciones basicas para grafos
+    /// 
     pub trait GrafoT<Vertice, Peso, Arista>
     where Vertice: VerticeT, Peso: PesoT, Arista: AristaT<Vertice, Peso>
     {
@@ -26,13 +29,21 @@ pub mod grafo_t
 
         ///
         /// Añade aristas al grafo
+        /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
-        fn add_aristas(&mut self, lista: Vec<Arista>);
+        fn add_aristas(&mut self, _: Vec<Arista>) 
+        {
+            unimplemented!("No puede ser modificado")
+        }
 
         ///
         /// Añade vertices al grafo
+        /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
-        fn add_vertices(&mut self, lista: Vec<Vertice>);
+        fn add_vertices(&mut self, _: Vec<Vertice>) 
+        {
+            unimplemented!("No puede ser modificado")
+        }
 
         ///
         /// Devuelve la lista de aristas del grafo
@@ -41,18 +52,27 @@ pub mod grafo_t
 
         ///
         /// Devuelve la lista de vertices del grafo
+        /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
         fn get_vertices(&self) -> Vec<&Vertice>;
 
         ///
         /// Elimina la arista proporcionada del grafo
+        /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
-        fn remove_arista(&mut self, e: &Arista);
+        fn remove_arista(&mut self, _: &Arista) 
+        {
+            unimplemented!("No puede ser modificado")
+        }
 
         ///
         /// Elimina el vertice proporcionado del grafo
+        /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
-        fn remove_vertice(&mut self, v: &Vertice);
+        fn remove_vertice(&mut self, _: &Vertice) 
+        {
+            unimplemented!("No puede ser modificado")
+        }
 
         ///
         /// PRE: Vertice al que calcular su entorno

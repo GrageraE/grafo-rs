@@ -14,10 +14,14 @@ pub mod grafo_rs
     ///
     /// Modulo Grafo. Componentes:
     ///     Grafo: estructura que representa un Grafo
-    ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
     /// 
     pub mod grafo;
     pub use grafo::grafo::Grafo;
+
+    ///
+    /// Submodulo Arbol de Grafo. Componentes:
+    ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
+    /// 
     pub use grafo::grafo::Arbol;
 
     ///

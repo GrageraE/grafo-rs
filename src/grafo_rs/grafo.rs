@@ -5,6 +5,9 @@ pub mod grafo
                         VerticeT, GrafoT};
 
     mod tests;
+    
+    pub mod arbol;
+    pub use arbol::arbol::Arbol;
 
     pub struct Grafo<Vertice, Peso = NoPeso> 
     where Vertice: VerticeT, Peso: PesoT {
@@ -13,15 +16,15 @@ pub mod grafo
 
     impl<Vertice, Peso> GrafoT<Vertice, Peso, Arista<Vertice, Peso>> for Grafo<Vertice, Peso>
     where Vertice: VerticeT, Peso: PesoT {
-        /// 
-        /// PRE: Cierto
+        ///
+        /// PRE: true
         /// POST: Grafo vacio
         /// 
-        fn new() -> Self
+        fn new() -> Self 
         {
-            Grafo{
-                lista_aristas: vec![],
-            }
+            Self{
+                lista_aristas: vec![]
+            }    
         }
 
         ///
@@ -162,52 +165,6 @@ pub mod grafo
         {
             Self {
                 lista_aristas: self.lista_aristas.clone()
-            }
-        }
-    }
-
-    pub struct Arbol<Vertice, Peso>
-    where Vertice: VerticeT, Peso: PesoT
-    {
-        grafo: Grafo<Vertice, Peso>,
-        raiz: Vertice
-    }
-
-    impl<Vertice, Peso> Arbol<Vertice, Peso> 
-    where Vertice: VerticeT, Peso: PesoT
-    {        
-        pub fn new(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
-        {
-            Self{
-                grafo,
-                raiz
-            }
-        }
-
-        pub fn estructura(&self) -> &Grafo<Vertice, Peso>
-        {
-            &self.grafo
-        }
-
-        pub fn raiz(&self) -> &Vertice
-        {
-            &self.raiz
-        }
-
-        pub fn into_grafo(self) -> Grafo<Vertice, Peso>
-        {
-            self.grafo
-        }
-
-    }
-
-    impl<Vertice, Peso> Clone for Arbol<Vertice, Peso>
-    where Vertice: VerticeT, Peso: PesoT
-    {
-        fn clone(&self) -> Self {
-            Self{
-                grafo: self.grafo.clone(),
-                raiz: self.raiz.clone()
             }
         }
     }

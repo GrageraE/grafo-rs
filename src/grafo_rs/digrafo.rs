@@ -1,11 +1,110 @@
 pub mod digrafo
 {
-    use crate::grafo_rs::{VerticeT, PesoT, AristaT, 
-                        GrafoT, NoPeso, Diarista};
+    use crate::grafo_rs::{Arista, AristaT, Diarista, Grafo, GrafoT, NoPeso, PesoT, VerticeT};
+
+    mod tests;
 
     pub struct Digrafo<Vertice, Peso = NoPeso>
     where Vertice: VerticeT, Peso: PesoT {
         lista_arcos: Vec<Diarista<Vertice, Peso>>
+    }
+
+    impl<Vertice, Peso> Digrafo<Vertice, Peso>
+    where Vertice: VerticeT, Peso: PesoT
+    {
+        ///
+        /// PRE: true
+        /// POST: Grafo subyacente conservando pesos
+        /// 
+        pub fn grafo_subyacente(&self) -> Grafo<Vertice, Peso>
+        {
+            let aristas: Vec<Arista<Vertice, Peso>> = self.lista_arcos.iter()
+                                        .map(|x| x.clone().into_arista())
+                                        .collect();
+            Grafo::from_aristas(aristas)
+        }
+
+        ///
+        /// PRE: Vertice
+        /// POST: Grado de entrada del vertice si esta en el digrado. None eoc
+        /// 
+        pub fn grado_entrada(&self, v: &Vertice) -> Option<usize>
+        {
+            let mut res = None;
+            for arco in self.lista_arcos.iter()
+            {
+                match arco {
+                    Diarista::Diarista(u1, u2, _) => {
+                        if u2 == v
+                        {
+                            res = match res {
+                                None => Some(1),
+                                Some(d) => Some(d + 1)
+                            };
+                        }
+                        else if let None = res
+                        {
+                            if u1 == v
+                            {
+                                res = Some(0);
+                            }
+                        }
+                    },
+                    Diarista::VerticeAislado(u) => {
+                        if u == v
+                        {
+                            if let None = res
+                            {
+                                res = Some(0);
+                            }
+                        }
+                    }
+                };
+            }
+            res
+        }
+
+        ///
+        /// PRE: Vertice
+        /// POST: Grado de salida del vertice si esta en el digrafo. None eoc
+        /// 
+        pub fn grado_salida(&self, v: &Vertice) -> Option<usize>
+        {
+            let mut res = None;
+
+            for arco in self.lista_arcos.iter()
+            {
+                match arco {
+                    Diarista::Diarista(u1, u2, _) => {
+                        if u1 == v
+                        {
+                            res = match res {
+                                None => Some(1),
+                                Some(d) => Some(d + 1)
+                            };
+                        }
+                        else if let None = res
+                        {
+                            if u2 == v
+                            {
+                                res = Some(0);
+                            }
+                        }
+                    },
+                    Diarista::VerticeAislado(u) => {
+                        if u == v
+                        {
+                            if let None = res
+                            {
+                                res = Some(0);
+                            }
+                        }
+                    }
+                };
+            }
+
+            res
+        }
     }
 
     impl<Vertice, Peso> GrafoT<Vertice, Peso, Diarista<Vertice, Peso>> for Digrafo<Vertice, Peso> 

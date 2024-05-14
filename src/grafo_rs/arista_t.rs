@@ -46,6 +46,14 @@ pub mod arista_t
         fn arista_contiene_vertice(&self, v0: &Vertice) -> bool;
 
         ///
+        /// Funcion miembro. Devuelve true si la arista es recorrible por el vertice v0. False eoc
+        /// 
+        fn es_accesible(&self, v0: &Vertice) -> bool
+        {
+            self.arista_contiene_vertice(v0)
+        }
+
+        ///
         /// Funcion miembro. Devuelve una tupla de sus extremos si es una arista. None eoc
         /// 
         fn get_vertices(&self) -> Option<(&Vertice, &Vertice)>;

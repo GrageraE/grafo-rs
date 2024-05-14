@@ -45,6 +45,18 @@ pub mod diarista
             }
         }
 
+        ///
+        /// PRE: Vertice
+        /// POST: True si es una arista y su primer extremo en v0. False eoc
+        /// 
+        fn es_accesible(&self, v0: &Vertice) -> bool {
+            // Es accesible si es una arista y v0 es su primer extremo
+            match &self {
+                Diarista::Diarista(u, _, _) => v0 == u,
+                _ => false
+            }
+        }
+
         fn es_vetice_aislado(&self, v: &Vertice) -> bool {
             match &self {
                 Self::VerticeAislado(v0) => v == v0,

@@ -178,14 +178,17 @@ pub mod algoritmo
         let mut acarreo_visitado = Peso::elemento_neutro();
         let mut vertices_visitados: Vec<&Vertice> = vec![v0];
 
-        let _ = vertices.iter().position(|x| **x == *v0)?;
+        if !vertices.contains(&v0)
+        {
+            return None;
+        }
 
-        while vertices_visitados.len() < vertices.len() {
-            let aristas_vecinas: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
-                                                .filter(|x| x.arista_contiene_vertice(vertice_visitado))
+        let mut aristas_vecinas: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
+                                                .filter(|x| x.es_accesible(vertice_visitado))
                                                 .filter(|x| !vertices_visitados.contains(&x.other(vertice_visitado).unwrap()))
                                                 .collect();
-            
+        while !aristas_vecinas.is_empty() {
+        
             for arista in aristas_vecinas.iter()
             {
                 // Comprobamos si el peso es negativo
@@ -229,6 +232,11 @@ pub mod algoritmo
             // Lo quitamos del vector de distancia temporal
             let menor_distancia_pos = menor_distancia.0;
             distancia_temporal[menor_distancia_pos] = (None, v0);
+            // Actualizamos las aristas vecinas
+            aristas_vecinas = grafo.get_aristas().iter()
+                                                .filter(|x| x.es_accesible(vertice_visitado))
+                                                .filter(|x| !vertices_visitados.contains(&x.other(vertice_visitado).unwrap()))
+                                                .collect();
         }
         distancia.add_vertice(v0.clone(), 0);
         Some((Arbol::from_grafo(arbol, v0.clone()), distancia))

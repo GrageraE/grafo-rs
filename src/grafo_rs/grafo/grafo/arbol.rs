@@ -4,15 +4,15 @@ pub mod arbol
 
     use crate::grafo_rs::{Arista, GrafoT, PesoT, VerticeT};
 
-    pub struct Arbol<Vertice, Peso>
-    where Vertice: VerticeT, Peso: PesoT
+    pub struct Arbol<Graf, Vertice, Peso>
+    where Graf: GrafoT<Vertice, Peso>, Vertice: VerticeT, Peso: PesoT
     {
-        grafo: Grafo<Vertice, Peso>,
+        grafo: Graf,
         raiz: Vertice
     }
 
-    impl<Vertice, Peso> GrafoT<Vertice, Peso> for Arbol<Vertice, Peso>
-    where Vertice: VerticeT, Peso: PesoT
+    impl<Graf, Vertice, Peso> GrafoT<Vertice, Peso> for Arbol<Graf, Vertice, Peso>
+    where Graf: GrafoT<Vertice, Peso>, Vertice: VerticeT, Peso: PesoT
     {
         type Arista = Arista<Vertice, Peso>;
 
@@ -33,8 +33,8 @@ pub mod arbol
         }
     }
 
-    impl<Vertice, Peso> Arbol<Vertice, Peso> 
-    where Vertice: VerticeT, Peso: PesoT
+    impl<Graf, Vertice, Peso> Arbol<Graf, Vertice, Peso> 
+    where Graf: GrafoT<Vertice, Peso>, Vertice: VerticeT, Peso: PesoT
     {        
         pub fn from_grafo(grafo: Grafo<Vertice, Peso>, raiz: Vertice) -> Self
         {
@@ -61,8 +61,8 @@ pub mod arbol
 
     }
 
-    impl<Vertice, Peso> Clone for Arbol<Vertice, Peso>
-    where Vertice: VerticeT, Peso: PesoT
+    impl<Graf, Vertice, Peso> Clone for Arbol<Graf, Vertice, Peso>
+    where Graf: GrafoT<Vertice, Peso>, Vertice: VerticeT, Peso: PesoT
     {
         fn clone(&self) -> Self {
             Self{

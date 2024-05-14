@@ -2,7 +2,7 @@
 mod tests
 {
     use super::super::{Arista, Grafo};
-    use crate::grafo_rs::{NoPeso, AristaT, GrafoT};
+    use crate::grafo_rs::{AristaT, Diarista, Digrafo, GrafoT, NoPeso};
     use super::super::{arbol_camino_minimo, arbol_peso_minimo, 
                     arbol_profundidad, comprobar_sucesion};
 
@@ -216,6 +216,23 @@ mod tests
         assert_eq!(distancias.buscar_vertice(&'B').unwrap().get_valor(), 4);
         assert_eq!(distancias.buscar_vertice(&'D').unwrap().get_valor(), 2);
         assert_eq!(distancias.buscar_vertice(&'E').unwrap().get_valor(), 5);
+    }
+
+    #[test]
+    fn test_dijkstra_3()
+    {
+        let dg: Digrafo<i32, usize> = Digrafo::from_aristas([Diarista::arista(1, 2, Some(7)),
+                                                                Diarista::arista(1, 4, Some(2)),
+                                                                Diarista::arista(2, 4, Some(2)),
+                                                                Diarista::arista(4, 2, Some(3)),
+                                                                Diarista::arista(2, 3, Some(1)),
+                                                                Diarista::arista(4, 3, Some(8))].to_vec());
+        let min = arbol_camino_minimo(&dg, &1)
+                        .expect("El arbol debe existir").1;
+        assert_eq!(min.buscar_vertice(&1).unwrap().get_valor(), 0);
+        assert_eq!(min.buscar_vertice(&2).unwrap().get_valor(), 5);
+        assert_eq!(min.buscar_vertice(&3).unwrap().get_valor(), 6);
+        assert_eq!(min.buscar_vertice(&4).unwrap().get_valor(), 2);
     }
 
 }

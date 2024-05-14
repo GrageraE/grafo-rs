@@ -5,13 +5,52 @@
 pub mod grafo_rs
 {
     ///
+    ///  Modulo Grafo_T. Componentes:
+    ///     GrafoT: caracteristica comun de grafo
+    /// 
+    pub mod grafo_t;
+    pub use grafo_t::grafo_t::GrafoT;
+
+    ///
     /// Modulo Grafo. Componentes:
     ///     Grafo: estructura que representa un Grafo
-    ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
     /// 
     pub mod grafo;
     pub use grafo::grafo::Grafo;
+
+    ///
+    /// Submodulo Arbol de Grafo. Componentes:
+    ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
+    /// 
     pub use grafo::grafo::Arbol;
+
+    ///
+    /// Modulo Digrafo. Componentes:
+    ///     Digrafo: estructura que representa un Digrafo
+    /// 
+    pub mod digrafo;
+    pub use digrafo::digrafo::Digrafo;
+
+    ///
+    /// Modulo Arista_T. Componentes:
+    ///     AristaT: caracteristica comun que deben cumplir las aristas
+    /// 
+    pub mod arista_t;
+    pub use arista_t::arista_t::AristaT;
+
+    ///
+    /// Submodulo Peso de Arista_T. Componentes:
+    ///     PesoT: caracteristica que debe cumplir la ponderacion
+    ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
+    /// 
+    pub use arista_t::arista_t::PesoT;
+    pub use arista_t::arista_t::NoPeso;
+
+    ///
+    /// Submodulo Vertice de Arista_T. Componentes:
+    ///     VerticeT: caracteristica que deben cumplir los vertices
+    /// 
+    pub use arista_t::arista_t::VerticeT;
 
     ///
     /// Modulo Arista. Componentes:
@@ -21,12 +60,11 @@ pub mod grafo_rs
     pub use arista::arista::Arista;
 
     ///
-    /// Submodulo Peso. Componentes:
-    ///     PesoT: caracteristica que debe cumplir la ponderacion
-    ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
+    /// Modulo Diarista. Componentes:
+    ///     Diarista: enumerador que representa una arista dirigida del grafo
     /// 
-    pub use arista::arista::PesoT;
-    pub use arista::arista::NoPeso;
+    pub mod diarista;
+    pub use diarista::diarista::Diarista;
 
     ///
     /// Modulo Algoritmo.

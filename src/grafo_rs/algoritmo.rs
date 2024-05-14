@@ -1,23 +1,52 @@
 pub mod algoritmo
 {
-    use crate::grafo_rs::Grafo;
-    use crate::grafo_rs::Arbol;
-
-    use crate::grafo_rs::Arista;
-    
-    use crate::grafo_rs::PesoT;
-    
-    use crate::grafo_rs::Etiquetado;
+    use crate::grafo_rs::{Arbol, Grafo, Arista, 
+                        AristaT, PesoT, VerticeT, GrafoT,
+                        Etiquetado};
     
     mod tests;
     
+    ///
+    /// PRE: Sucesion de numeros enteros decreciente
+    /// POST: Devuelve cierto en caso de ser sucesion grafica, eoc falso
+    /// NOTA: Se implementa usando el Teorema de Havel-Hakimi
+    /// 
+    pub fn comprobar_sucesion(sucesion: &Vec<isize>) -> bool
+    {            
+        let mut sucesion = sucesion.clone();
+        if sucesion.len() == 0 { return false; }
+        sucesion.sort_by(|g1, g2| g2.cmp(g1));
+        if sucesion[0] >= sucesion.len().try_into().unwrap() { return false; }
+
+        while sucesion[0] > 0
+        {
+            let first = sucesion[0];
+            // Costruimos un nuevo vector
+            sucesion = sucesion.iter().enumerate().map(|(i, e)| {
+                if i > 0 && i <= first.try_into().unwrap()
+                { return *e - 1;}
+                *e
+            }).collect();
+            sucesion.remove(0);
+            sucesion.sort_by(|g1, g2| g2.cmp(g1));
+        }
+        match sucesion.last() {
+            Some(e) => match e.cmp(&0) {
+                std::cmp::Ordering::Less => false,
+                std::cmp::Ordering::Equal => true,
+                std::cmp::Ordering::Greater => { panic!("sucesion.last mayor que 0 !!"); }
+            },
+            None => false
+        }
+    }
+
     ///
     /// PRE: Cierto
     /// POST: Arbol generador de peso minimo
     /// NOTA: Implementacion del algoritmo de Prim. Requere que el Peso tenga un orden parcial definido
     /// 
-    pub fn arbol_peso_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>) -> Option<Arbol<Vertice, Peso>>
-    where Vertice: Clone + PartialEq, Peso: PesoT + Ord
+    pub fn arbol_peso_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>) -> Option<Arbol<Grafo<Vertice, Peso>, Vertice, Peso>>
+    where Vertice: VerticeT, Peso: PesoT + Ord
     {
         let mut arbol = Grafo::new();
         // Seleccionamos un vertice aleatorio
@@ -69,7 +98,7 @@ pub mod algoritmo
             }
         }
 
-        Some(Arbol::<Vertice, Peso>::new(arbol, vertice_inicial.clone()))
+        Some(Arbol::<Grafo<Vertice, Peso>, Vertice, Peso>::from_grafo(arbol, vertice_inicial.clone()))
     }
 
     ///
@@ -77,8 +106,8 @@ pub mod algoritmo
     /// POST: Terna de Arbol de busqueda de profundidad con la raiz proporcionada y etiquetado.
     /// Si la raiz no esta en el grafo, devuelve None
     /// 
-    pub fn arbol_profundidad<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
-    where Vertice: Clone + PartialEq, Peso: PesoT
+    pub fn arbol_profundidad<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Grafo<Vertice, Peso>, Vertice, Peso>, Etiquetado<Vertice>)>
+    where Vertice: VerticeT, Peso: PesoT
     {
         let mut arbol = Grafo::new();
         let mut df = Etiquetado::new(Some("df"));
@@ -126,7 +155,7 @@ pub mod algoritmo
             }
         }
 
-        Some((Arbol::new(arbol, v0.clone()), df))
+        Some((Arbol::from_grafo(arbol, v0.clone()), df))
     }
 
     ///
@@ -135,12 +164,12 @@ pub mod algoritmo
     /// etiquetado con las longitudes. None si no pertenece al grafo o si faltan pesos
     /// NOTA: Implementacion del algoritmo de Dijkstra. Se requiere que Peso implemente un orden parcial
     /// 
-    pub fn arbol_camino_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
-    where Vertice: Clone + PartialEq, Peso: PesoT + Ord
+    pub fn arbol_camino_minimo<Graf, Vertice, Peso>(grafo: &Graf, v0: &Vertice) -> Option<(Arbol<Graf, Vertice, Peso>, Etiquetado<Vertice>)>
+    where Graf: GrafoT<Vertice, Peso>, Vertice: VerticeT, Peso: PesoT + Ord
     {
         let vertices = grafo.get_vertices();
 
-        let mut arbol = Grafo::new();
+        let mut arbol = Graf::new();
         let mut distancia = Etiquetado::new(Some("Distancias"));
 
         // Variables temporales
@@ -149,14 +178,17 @@ pub mod algoritmo
         let mut acarreo_visitado = Peso::elemento_neutro();
         let mut vertices_visitados: Vec<&Vertice> = vec![v0];
 
-        let _ = vertices.iter().position(|x| **x == *v0)?;
+        if !vertices.contains(&v0)
+        {
+            return None;
+        }
 
-        while vertices_visitados.len() < vertices.len() {
-            let aristas_vecinas: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
-                                                .filter(|x| x.arista_contiene_vertice(vertice_visitado))
+        let mut aristas_vecinas: Vec<&Graf::Arista> = grafo.get_aristas().iter()
+                                                .filter(|x| x.es_accesible(vertice_visitado))
                                                 .filter(|x| !vertices_visitados.contains(&x.other(vertice_visitado).unwrap()))
                                                 .collect();
-            
+        while !aristas_vecinas.is_empty() {
+        
             for arista in aristas_vecinas.iter()
             {
                 // Comprobamos si el peso es negativo
@@ -200,8 +232,13 @@ pub mod algoritmo
             // Lo quitamos del vector de distancia temporal
             let menor_distancia_pos = menor_distancia.0;
             distancia_temporal[menor_distancia_pos] = (None, v0);
+            // Actualizamos las aristas vecinas
+            aristas_vecinas = grafo.get_aristas().iter()
+                                                .filter(|x| x.es_accesible(vertice_visitado))
+                                                .filter(|x| !vertices_visitados.contains(&x.other(vertice_visitado).unwrap()))
+                                                .collect();
         }
         distancia.add_vertice(v0.clone(), 0);
-        Some((Arbol::new(arbol, v0.clone()), distancia))
+        Some((Arbol::from_grafo(arbol, v0.clone()), distancia))
     }
 }

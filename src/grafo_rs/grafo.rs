@@ -14,8 +14,10 @@ pub mod grafo
         lista_aristas: Vec<Arista<Vertice, Peso>>,
     }
 
-    impl<Vertice, Peso> GrafoT<Vertice, Peso, Arista<Vertice, Peso>> for Grafo<Vertice, Peso>
+    impl<Vertice, Peso> GrafoT<Vertice, Peso> for Grafo<Vertice, Peso>
     where Vertice: VerticeT, Peso: PesoT {
+        type Arista = Arista<Vertice, Peso>;
+
         ///
         /// PRE: true
         /// POST: Grafo vacio

@@ -5,9 +5,11 @@ pub mod grafo_t
     ///
     /// Trait que define las operaciones basicas para grafos
     /// 
-    pub trait GrafoT<Vertice, Peso, Arista>
-    where Vertice: VerticeT, Peso: PesoT, Arista: AristaT<Vertice, Peso>
+    pub trait GrafoT<Vertice, Peso>
+    where Vertice: VerticeT, Peso: PesoT
     {
+        type Arista: AristaT<Vertice, Peso>;
+
         ///
         /// Crea un nuevo Grafo vacio
         /// 
@@ -25,13 +27,13 @@ pub mod grafo_t
         ///
         /// Crea un grafo a partir de un vector de aristas
         /// 
-        fn from_aristas(lista: Vec<Arista>) -> Self;
+        fn from_aristas(lista: Vec<Self::Arista>) -> Self;
 
         ///
         /// Añade aristas al grafo
         /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
-        fn add_aristas(&mut self, _: Vec<Arista>) 
+        fn add_aristas(&mut self, _: Vec<Self::Arista>) 
         {
             unimplemented!("No puede ser modificado")
         }
@@ -48,7 +50,7 @@ pub mod grafo_t
         ///
         /// Devuelve la lista de aristas del grafo
         /// 
-        fn get_aristas(&self) -> &Vec<Arista>;
+        fn get_aristas(&self) -> &Vec<Self::Arista>;
 
         ///
         /// Devuelve la lista de vertices del grafo
@@ -60,7 +62,7 @@ pub mod grafo_t
         /// Elimina la arista proporcionada del grafo
         /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
         /// 
-        fn remove_arista(&mut self, _: &Arista) 
+        fn remove_arista(&mut self, _: &Self::Arista) 
         {
             unimplemented!("No puede ser modificado")
         }
@@ -79,7 +81,7 @@ pub mod grafo_t
         /// POST: Devuelve un vector con referencias a los vertices adyacentes a v. Si no pertenece al grafo, None
         /// 
         fn entorno<'a>(&'a self, v: &Vertice) -> Option<Vec<&Vertice>>
-        where Arista: 'a
+        where Self::Arista: 'a
         {
             let mut res = vec![];
             let mut encontrado = false;
@@ -110,7 +112,7 @@ pub mod grafo_t
         /// PRE: El vertice tiene que pertenecer al grafo
         /// POST: Vector con referencias a las aristas
         /// 
-        fn aristas_por_vertice(&self, v: &Vertice) -> Vec<&Arista>
+        fn aristas_por_vertice(&self, v: &Vertice) -> Vec<&Self::Arista>
         {
             self.get_aristas().iter().filter(|x| x.arista_contiene_vertice(v)).collect()
         }

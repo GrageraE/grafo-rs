@@ -11,9 +11,11 @@ pub mod arbol
         raiz: Vertice
     }
 
-    impl<Vertice, Peso> GrafoT<Vertice, Peso, Arista<Vertice, Peso>> for Arbol<Vertice, Peso>
+    impl<Vertice, Peso> GrafoT<Vertice, Peso> for Arbol<Vertice, Peso>
     where Vertice: VerticeT, Peso: PesoT
     {
+        type Arista = Arista<Vertice, Peso>;
+
         fn new() -> Self {
             unimplemented!("Arbol no puede ser creado")
         }

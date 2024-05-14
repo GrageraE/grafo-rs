@@ -107,8 +107,10 @@ pub mod digrafo
         }
     }
 
-    impl<Vertice, Peso> GrafoT<Vertice, Peso, Diarista<Vertice, Peso>> for Digrafo<Vertice, Peso> 
+    impl<Vertice, Peso> GrafoT<Vertice, Peso> for Digrafo<Vertice, Peso> 
     where Vertice: VerticeT, Peso: PesoT {
+        type Arista = Diarista<Vertice, Peso>;
+
         fn new() -> Self {
             Self{
                 lista_arcos: vec![]

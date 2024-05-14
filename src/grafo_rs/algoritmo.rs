@@ -45,7 +45,7 @@ pub mod algoritmo
     /// POST: Arbol generador de peso minimo
     /// NOTA: Implementacion del algoritmo de Prim. Requere que el Peso tenga un orden parcial definido
     /// 
-    pub fn arbol_peso_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>) -> Option<Arbol<Vertice, Peso>>
+    pub fn arbol_peso_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>) -> Option<Arbol<Grafo<Vertice, Peso>, Vertice, Peso>>
     where Vertice: VerticeT, Peso: PesoT + Ord
     {
         let mut arbol = Grafo::new();
@@ -98,7 +98,7 @@ pub mod algoritmo
             }
         }
 
-        Some(Arbol::<Vertice, Peso>::from_grafo(arbol, vertice_inicial.clone()))
+        Some(Arbol::<Grafo<Vertice, Peso>, Vertice, Peso>::from_grafo(arbol, vertice_inicial.clone()))
     }
 
     ///
@@ -106,7 +106,7 @@ pub mod algoritmo
     /// POST: Terna de Arbol de busqueda de profundidad con la raiz proporcionada y etiquetado.
     /// Si la raiz no esta en el grafo, devuelve None
     /// 
-    pub fn arbol_profundidad<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
+    pub fn arbol_profundidad<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Grafo<Vertice, Peso>, Vertice, Peso>, Etiquetado<Vertice>)>
     where Vertice: VerticeT, Peso: PesoT
     {
         let mut arbol = Grafo::new();
@@ -164,12 +164,12 @@ pub mod algoritmo
     /// etiquetado con las longitudes. None si no pertenece al grafo o si faltan pesos
     /// NOTA: Implementacion del algoritmo de Dijkstra. Se requiere que Peso implemente un orden parcial
     /// 
-    pub fn arbol_camino_minimo<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<(Arbol<Vertice, Peso>, Etiquetado<Vertice>)>
-    where Vertice: VerticeT, Peso: PesoT + Ord
+    pub fn arbol_camino_minimo<Graf, Vertice, Peso>(grafo: &Graf, v0: &Vertice) -> Option<(Arbol<Graf, Vertice, Peso>, Etiquetado<Vertice>)>
+    where Graf: GrafoT<Vertice, Peso>, Vertice: VerticeT, Peso: PesoT + Ord
     {
         let vertices = grafo.get_vertices();
 
-        let mut arbol = Grafo::new();
+        let mut arbol = Graf::new();
         let mut distancia = Etiquetado::new(Some("Distancias"));
 
         // Variables temporales
@@ -183,7 +183,7 @@ pub mod algoritmo
             return None;
         }
 
-        let mut aristas_vecinas: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
+        let mut aristas_vecinas: Vec<&Graf::Arista> = grafo.get_aristas().iter()
                                                 .filter(|x| x.es_accesible(vertice_visitado))
                                                 .filter(|x| !vertices_visitados.contains(&x.other(vertice_visitado).unwrap()))
                                                 .collect();

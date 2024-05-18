@@ -72,6 +72,15 @@ pub mod diarista
             None
         }
 
+        fn into_vertices(self) -> Option<(Vertice, Vertice)> 
+        {
+            if let Diarista::Diarista(v, w, _) = self
+            {
+                return Some((v, w));
+            }
+            None
+        }
+
         fn get_peso(&self) -> Option<&Peso> {
             match &self {
                 Self::Diarista(_, _, p) => p.as_ref(),

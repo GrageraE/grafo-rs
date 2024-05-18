@@ -75,6 +75,20 @@ pub mod arista
         }
 
         ///
+        /// PRE: Arista
+        /// POST: Tupla con los vertices si es arista. None si es vertice aislado
+        /// NOTA: La arista se consume con esta funcion
+        /// 
+        fn into_vertices(self) -> Option<(Vertice, Vertice)> 
+        {
+            if let Arista::Arista(v, w, _) = self
+            {
+                return Some((v, w));
+            }
+            None
+        }
+
+        ///
         /// PRE: Arista y Vertice
         /// POST: Cieto si es vertice aislado y contiene a v. Falso eoc
         /// 

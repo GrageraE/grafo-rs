@@ -59,6 +59,11 @@ pub mod arista_t
         fn get_vertices(&self) -> Option<(&Vertice, &Vertice)>;
 
         ///
+        /// Funcion miembro. Consume la arista y devuelve sus vertices. None si es vertice aislado
+        /// 
+        fn into_vertices(self) -> Option<(Vertice, Vertice)>;
+
+        ///
         /// Funcion miembro. Devuelve true si es un vertice aislado y v es su vertice. False eoc
         /// 
         fn es_vetice_aislado(&self, v: &Vertice) -> bool;

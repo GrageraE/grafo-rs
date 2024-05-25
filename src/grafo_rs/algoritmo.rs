@@ -110,9 +110,6 @@ pub mod algoritmo
     {
         let mut arbol: Grafo<Vertice, Peso> = Grafo::new();
         // Variables temporales
-        /*
-            FIXME: Añadir en paso inicial las aristas adyacentes a v0
-         */
         let mut vertices_visitados: Vec<&Vertice> = vec![v0];
         let mut aristas_frontera: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
                                 .filter(|x| x.arista_contiene_vertice(v0))

@@ -1,10 +1,12 @@
 #[cfg(test)]
 mod tests
 {
+    use core::panic;
+
     use super::super::{Arista, Grafo};
     use crate::grafo_rs::{AristaT, Diarista, Digrafo, GrafoT, NoPeso};
     use super::super::{arbol_camino_minimo, arbol_peso_minimo, 
-                    arbol_profundidad, comprobar_sucesion};
+                    arbol_profundidad, comprobar_sucesion, arbol_anchura};
 
     #[test]
     fn test_sucesion_grafica()
@@ -63,6 +65,33 @@ mod tests
         
         // Comprobar el peso del arbol
         assert!(Arista::<i32, isize>::sumatorio_pesos(arbol.get_aristas()) == 39);
+    }
+
+    #[test]
+    fn test_arbol_anchura()
+    {
+        let g: Grafo<char> = Grafo::from_aristas([Arista::arista_sin_peso('v', 'r'),
+                                                        Arista::arista_sin_peso('s', 'r'),
+                                                        Arista::arista_sin_peso('w', 's'),
+                                                        Arista::arista_sin_peso('w', 'x'),
+                                                        Arista::arista_sin_peso('x', 'y'),
+                                                        Arista::arista_sin_peso('x', 't'),
+                                                        Arista::arista_sin_peso('x', 'u'),
+                                                        Arista::arista_sin_peso('t', 'u'),
+                                                        Arista::arista_sin_peso('t', 'w'),
+                                                        Arista::arista_sin_peso('y', 'u')].to_vec());
+        let anchura = arbol_anchura(&g, &'v').expect("El arbol debe existr").into_grafo();
+        for arista in anchura.get_aristas()
+        {
+            if let Arista::Arista(v, w, _) = arista
+            {
+                println!("ARISTA: {} -> {}", v, w);
+            }
+            else {
+                panic!("No deben haber vertices aislados en el resultado");
+            }
+        }
+        
     }
 
     #[test]

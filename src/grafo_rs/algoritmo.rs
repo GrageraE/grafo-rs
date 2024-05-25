@@ -102,6 +102,63 @@ pub mod algoritmo
     }
 
     ///
+    /// PRE: Grafo y vertice raiz
+    /// POST: Arbol de busqueda en anchura en el vertice si esta en el grafo. None eoc
+    /// 
+    pub fn arbol_anchura<Vertice, Peso>(grafo: &Grafo<Vertice, Peso>, v0: &Vertice) -> Option<Arbol<Grafo<Vertice, Peso>, Vertice, Peso>>
+    where Vertice: VerticeT, Peso: PesoT
+    {
+        let mut arbol: Grafo<Vertice, Peso> = Grafo::new();
+        // Variables temporales
+        /*
+            FIXME: Añadir en paso inicial las aristas adyacentes a v0
+         */
+        let mut vertices_visitados: Vec<&Vertice> = vec![v0];
+        let mut aristas_frontera: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
+                                .filter(|x| x.arista_contiene_vertice(v0))
+                                .collect();
+        let mut vertices_proximos: Vec<&Vertice> = aristas_frontera.iter()
+                                .map(|x| x.other(v0).unwrap())
+                                .collect();
+        
+        while !aristas_frontera.is_empty()
+        {
+            // Añadimos las aristas frontera
+            for (pos, arista) in aristas_frontera.into_iter().enumerate()
+            {
+                let vertice_contrario = vertices_proximos.get(pos).unwrap();
+                if !vertices_visitados.contains(&vertice_contrario)
+                {
+                    vertices_visitados.push(vertice_contrario);
+                    arbol.add_aristas(vec![arista.clone()]);
+                }
+            }
+            // Actualizamos las aristas frontera
+            let mut nuevas_aristas: Vec<&Arista<Vertice, Peso>> = vec![];
+            let mut nuevos_vertices: Vec<&Vertice> = vec![];
+            for vertice in vertices_proximos.into_iter()
+            {
+                let mut aristas_vertice: Vec<&Arista<Vertice, Peso>> = grafo.get_aristas().iter()
+                                .filter(|x| x.arista_contiene_vertice(vertice))
+                                .filter(|x| !vertices_visitados.contains(&x.other(vertice).unwrap()))
+                                .collect();
+                nuevos_vertices.append(&mut aristas_vertice.iter()
+                                .map(|x| x.other(vertice).unwrap()).collect());
+                nuevas_aristas.append(&mut aristas_vertice);
+            }
+            aristas_frontera = nuevas_aristas;
+            // Actualizamos los nuevos vertices
+            vertices_proximos = nuevos_vertices;
+        }
+        if arbol.get_aristas().is_empty()
+        {
+            return None;
+        }
+
+        Some(Arbol::from_grafo(arbol, v0.clone()))
+    }
+
+    ///
     /// PRE: Grafo y referencia a Vertice
     /// POST: Terna de Arbol de busqueda de profundidad con la raiz proporcionada y etiquetado.
     /// Si la raiz no esta en el grafo, devuelve None

@@ -9,68 +9,68 @@ pub mod grafo_rs
     ///     GrafoT: caracteristica comun de grafo
     /// 
     pub mod grafo_t;
-    pub use grafo_t::grafo_t::GrafoT;
+    pub use grafo_t::GrafoT;
 
     ///
     /// Modulo Grafo. Componentes:
     ///     Grafo: estructura que representa un Grafo
     /// 
     pub mod grafo;
-    pub use grafo::grafo::Grafo;
+    pub use grafo::Grafo;
 
     ///
     /// Submodulo Arbol de Grafo. Componentes:
     ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
     /// 
-    pub use grafo::grafo::Arbol;
+    pub use grafo::Arbol;
 
     ///
     /// Modulo Digrafo. Componentes:
     ///     Digrafo: estructura que representa un Digrafo
     /// 
     pub mod digrafo;
-    pub use digrafo::digrafo::Digrafo;
+    pub use digrafo::Digrafo;
 
     ///
     /// Modulo Arista_T. Componentes:
     ///     AristaT: caracteristica comun que deben cumplir las aristas
     /// 
     pub mod arista_t;
-    pub use arista_t::arista_t::AristaT;
+    pub use arista_t::AristaT;
 
     ///
     /// Submodulo Peso de Arista_T. Componentes:
     ///     PesoT: caracteristica que debe cumplir la ponderacion
     ///     NoPeso: estructura vacia que representa la imposibilidad de ponderar una arista
     /// 
-    pub use arista_t::arista_t::PesoT;
-    pub use arista_t::arista_t::NoPeso;
+    pub use arista_t::PesoT;
+    pub use arista_t::NoPeso;
 
     ///
     /// Submodulo Vertice de Arista_T. Componentes:
     ///     VerticeT: caracteristica que deben cumplir los vertices
     /// 
-    pub use arista_t::arista_t::VerticeT;
+    pub use arista_t::VerticeT;
 
     ///
     /// Modulo Arista. Componentes:
     ///     Arista: enumerador que representa una arista del grafo
     /// 
     pub mod arista;
-    pub use arista::arista::Arista;
+    pub use arista::Arista;
 
     ///
     /// Modulo Diarista. Componentes:
     ///     Diarista: enumerador que representa una arista dirigida del grafo
     /// 
     pub mod diarista;
-    pub use diarista::diarista::Diarista;
+    pub use diarista::Diarista;
 
     ///
     /// Modulo Algoritmo.
     /// 
     pub mod algoritmo;
-    pub use algoritmo::algoritmo::*;
+    pub use algoritmo::*;
     
     ///
     /// Modulo Etiquetado. Componentes:
@@ -78,7 +78,7 @@ pub mod grafo_rs
     ///     Etiquetado: estructura envoltorio que contiene un vector de Etiqueta
     /// 
     pub mod etiquetado;
-    pub use etiquetado::etiquetado::Etiqueta;
-    pub use etiquetado::etiquetado::Etiquetado;
+    pub use etiquetado::Etiqueta;
+    pub use etiquetado::Etiquetado;
 
 }

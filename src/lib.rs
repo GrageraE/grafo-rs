@@ -71,6 +71,15 @@ pub mod grafo_rs
     /// 
     pub mod algoritmo;
     pub use algoritmo::*;
+
+    ///
+    /// Modulo Red_Transporte. Componentes:
+    ///     Red: Red de transporte
+    ///     Flujo: El flujo de una Diarista
+    /// 
+    pub mod red_transporte;
+    pub use red_transporte::Red;
+    pub use red_transporte::Flujo;
     
     ///
     /// Modulo Etiquetado. Componentes:

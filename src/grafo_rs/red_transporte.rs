@@ -11,7 +11,6 @@ where Vertice: VerticeT, Peso: PesoT
 {
     nombre: Option<String>,
     flujos: Vec<Flujo<Vertice, Peso>>,
-    // TODO: Convertir en referencias:
     fuente: Vertice,
     sumidero: Vertice
 }
@@ -104,22 +103,33 @@ where Vertice: VerticeT, Peso: PesoT
             f.set_valor(valor);
         } 
     }
-
+    ///
+    /// POST: Nombre de la red
+    /// 
     pub fn get_nombre(&self) -> Option<&str>
     {
         self.nombre.as_deref()
     }
 
+    ///
+    /// POST: Referencia a la fuente
+    /// 
     pub fn get_fuente(&self) -> &Vertice
     {
         &self.fuente
     }
 
+    ///
+    /// POST: Referencia al sumidero
+    /// 
     pub fn get_sumidero(&self) -> &Vertice
     {
         &self.sumidero
     }
 
+    ///
+    /// POST: Consume la red, devolviendo el digrafo subyacente
+    /// 
     pub fn into_digrafo(self) -> Digrafo<Vertice, Peso>
     {
         let arcos: Vec<Diarista<Vertice, Peso>> = self.flujos.into_iter()

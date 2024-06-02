@@ -11,6 +11,10 @@ where Vertice: VerticeT, Peso: PesoT
 impl<Vertice, Peso> Flujo<Vertice, Peso>
 where Vertice: VerticeT, Peso: PesoT
 {
+    ///
+    /// PRE: Arco y su capacidad
+    /// POST: Flujo nulo con capacidad y arco dados
+    /// 
     pub fn new(arco: Diarista<Vertice, Peso>, capacidad: u64) -> Flujo<Vertice, Peso>
     {
         Self{
@@ -20,16 +24,26 @@ where Vertice: VerticeT, Peso: PesoT
         }
     }
 
+    ///
+    /// POST: Capacidad del flujo
+    /// 
     pub fn get_capacidad(&self) -> u64
     {
         self.capacidad
     }
 
+    ///
+    /// POST: Valor del flujo
+    /// 
     pub fn get_valor(&self) -> u64
     {
         self.valor
     }
 
+    ///
+    /// PRE: Nuevo valor
+    /// POST: Si el nuevo valor no supera la capacidad, se devuelve Some(()) y se aplica. None eoc. 
+    /// 
     pub fn set_valor(&mut self, valor: u64) -> Option<()>
     {
         if valor > self.capacidad {
@@ -39,11 +53,17 @@ where Vertice: VerticeT, Peso: PesoT
         Some(())
     }
 
+    ///
+    /// POST: Referencia al arco del flujo
+    /// 
     pub fn get_arco(&self) -> &Diarista<Vertice, Peso>
     {
         &self.arco
     }
 
+    ///
+    /// POST: Consume el flujo, devolviendo su arco
+    /// 
     pub fn into_arco(self) -> Diarista<Vertice, Peso>
     {
         self.arco

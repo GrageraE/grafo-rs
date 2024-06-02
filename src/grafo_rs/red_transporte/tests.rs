@@ -30,3 +30,13 @@ fn test_comparacion_flujos()
     let flujo2 = red.get_flujo(&arco4).unwrap();
     assert!(flujo1 > flujo2);
 }
+
+#[test]
+fn test_creacion_red()
+{
+    let arco1: Diarista<i32, NoPeso> = Diarista::arista_sin_peso(1, 2);
+    let red = Red::new(None, 1, [(2, 2)].to_vec(), 
+        2, [(1, 4)].to_vec(), vec![(arco1.clone(), 10)]);
+    assert!(red.get_flujo(&arco1).expect("arco1 no esta en la red").get_capacidad() == 2, 
+        "La funcion get_valor devuelve el primer flujo");
+}

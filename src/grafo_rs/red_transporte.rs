@@ -15,6 +15,27 @@ where Vertice: VerticeT, Peso: PesoT
     sumidero: Vertice
 }
 
+///
+/// PRE: Red, referencia a arco y valor (opcional - por defecto, 1)
+/// 
+/// POST: Si el arco esta en la red, se intenta incrementar su flujo. Si es posible, Some(()). Eoc, None
+/// 
+#[macro_export]
+macro_rules! incrementar_flujo {
+    ($r:expr, $a:expr) => {
+        (|| {
+            let flujo_actual = $r.get_valor($a)?;
+            $r.set_valor($a, flujo_actual + 1)
+        })()
+    };
+    ($r:expr, $a:expr, $c:expr) => {
+        (|| {
+            let flujo_actual = $r.get_valor($a)?;
+            $r.set_valor($a, flujo_actual + $c)
+        })()
+    };
+}
+
 impl<Vertice, Peso> Red<Vertice, Peso>
 where Vertice: VerticeT, Peso: PesoT
 {
@@ -95,14 +116,16 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     /// NOTA: No se revisa si el arco esta en la red o si el valor es mayor que su capacidad
     /// 
-    pub fn set_valor(&mut self, arco: &Diarista<Vertice, Peso>, valor: u64)
+    pub fn set_valor(&mut self, arco: &Diarista<Vertice, Peso>, valor: u64) -> Option<()>
     {
         if let Some(f) = 
             self.flujos.iter_mut().filter(|x| x.get_arco() == arco).next()
         {
-            f.set_valor(valor);
-        } 
+            return f.set_valor(valor);
+        }
+        None
     }
+
     ///
     /// POST: Nombre de la red
     /// 

@@ -4,17 +4,18 @@
 pub trait VerticeT : Clone + PartialEq
 {}
 
-impl VerticeT for i32
-{}
+///
+/// PRE: Tipos separados por comas
+/// POST: Se implementa VerticeT para los tipos dados. Los tipos deberan implementar `Clone` y `PartialEq`
+/// 
+#[macro_export]
+macro_rules! impl_vertice_t {
+    ($($t:ty),+) => {
+        $(
+            impl VerticeT for $t
+            {}
+        )+
+    };
+}
 
-impl VerticeT for u8
-{}
-
-impl VerticeT for usize 
-{}
-
-impl VerticeT for isize 
-{}
-
-impl VerticeT for char
-{}
+impl_vertice_t!(u32, i32, u8, isize, usize, char);

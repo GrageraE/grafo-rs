@@ -11,8 +11,8 @@ where Vertice: VerticeT, Peso: PesoT
 {
     nombre: Option<String>,
     flujos: Vec<Flujo<Vertice, Peso>>,
-    fuente: Vertice,
-    sumidero: Vertice
+    flujos_fuente: Vec<Flujo<Vertice, Peso>>,
+    flujos_sumidero: Vec<Flujo<Vertice, Peso>>
 }
 
 ///
@@ -50,31 +50,36 @@ where Vertice: VerticeT, Peso: PesoT
     /// POST: Red de transporte
     /// 
     pub fn new(nombre: Option<String>, fuente: Vertice, vertices_fuente: Vec<(Vertice, u64)>, 
-        sumidero: Vertice, vertices_sumidero: Vec<(Vertice, u64)>, mut arcos: Vec<(Diarista<Vertice, Peso>, u64)>)
-        -> Self
+        sumidero: Vertice, vertices_sumidero: Vec<(Vertice, u64)>, arcos: Vec<(Diarista<Vertice, Peso>, u64)>)
+        -> Option<Self>
     {
-        // Recogemos las aristas
-        let mut arcos_capacidad: Vec<(Diarista<Vertice, Peso>, u64)> = vec![];
-        let mut vertices_fuente = vertices_fuente.into_iter()
-                        .map(|x| (Diarista::arista_sin_peso(fuente.clone(), x.0), x.1))
-                        .collect();
-        let mut vertices_sumidero = vertices_sumidero.into_iter()
-                        .map(|x| (Diarista::arista_sin_peso(sumidero.clone(), x.0), x.1))
-                        .collect();
-
-        arcos_capacidad.append(&mut vertices_fuente);
-        arcos_capacidad.append(&mut vertices_sumidero);
-        arcos_capacidad.append(&mut arcos);
-        // Construimos los flujos
-        let flujos: Vec<Flujo<Vertice, Peso>> = arcos_capacidad.into_iter()
-                        .map(|x| Flujo::new(x.0, x.1))
-                        .collect();
-        Self{
+        // Construimos los arcos
+        let arcos_fuente: Vec<(Diarista<Vertice, Peso>, u64)> = vertices_fuente.into_iter()
+                            .map(|x| (Diarista::arista_sin_peso(fuente.clone(), x.0), x.1))
+                            .collect();
+        let arcos_sumidero: Vec<(Diarista<Vertice, Peso>, u64)> = vertices_sumidero.into_iter()
+                            .map(|x| (Diarista::arista_sin_peso(x.0, sumidero.clone()), x.1))
+                            .collect();
+        if arcos_fuente.len() == 0 || arcos_sumidero.len() == 0
+        {
+            return None;
+        }
+        // Construimos los arcos
+        let flujos_fuente: Vec<Flujo<Vertice, Peso>> = arcos_fuente.into_iter()
+                            .map(|x| Flujo::new(x.0, x.1))
+                            .collect();
+        let flujos_sumidero: Vec<Flujo<Vertice, Peso>> = arcos_sumidero.into_iter()
+                            .map(|x| Flujo::new(x.0, x.1))
+                            .collect();
+        let flujos: Vec<Flujo<Vertice, Peso>> = arcos.into_iter()
+                            .map(|x| Flujo::new(x.0, x.1))
+                            .collect();
+        Some (Self {
             nombre,
             flujos,
-            fuente,
-            sumidero
-        }
+            flujos_fuente,
+            flujos_sumidero
+        })
     }
 
     ///
@@ -85,6 +90,14 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn get_flujo(&self, arco: &Diarista<Vertice, Peso>) -> Option<&Flujo<Vertice, Peso>>
     {
+        if arco.arista_contiene_vertice(self.get_fuente())
+        {
+            return self.flujos_fuente.iter().filter(|x| x.get_arco() == arco).next();
+        }
+        if arco.arista_contiene_vertice(self.get_sumidero())
+        {
+            return self.flujos_sumidero.iter().filter(|x| x.get_arco() == arco).next();
+        }
         self.flujos.iter().filter(|x| x.get_arco() == arco).next()
     }
 
@@ -98,6 +111,14 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn get_flujo_mut(&mut self, arco: &Diarista<Vertice, Peso>) -> Option<&mut Flujo<Vertice, Peso>>
     {
+        if arco.arista_contiene_vertice(self.get_fuente())
+        {
+            return self.flujos_fuente.iter_mut().filter(|x| x.get_arco() == arco).next();
+        }
+        if arco.arista_contiene_vertice(self.get_sumidero())
+        {
+            return self.flujos_sumidero.iter_mut().filter(|x| x.get_arco() == arco).next();
+        }
         self.flujos.iter_mut().filter(|x| x.get_arco() == arco).next()
     }
 
@@ -107,7 +128,7 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn get_valor(&self, arco: &Diarista<Vertice, Peso>) -> Option<u64>
     {
-        Some(self.flujos.iter().filter(|x| x.get_arco() == arco).next()?.get_valor())
+        Some(self.get_flujo(arco)?.get_valor())
     }
 
     ///
@@ -118,12 +139,7 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn set_valor(&mut self, arco: &Diarista<Vertice, Peso>, valor: u64) -> Option<()>
     {
-        if let Some(f) = 
-            self.flujos.iter_mut().filter(|x| x.get_arco() == arco).next()
-        {
-            return f.set_valor(valor);
-        }
-        None
+        self.get_flujo_mut(arco)?.set_valor(valor)
     }
 
     ///
@@ -139,7 +155,7 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn get_fuente(&self) -> &Vertice
     {
-        &self.fuente
+        self.flujos_fuente.get(0).unwrap().get_arco().get_vertices().unwrap().0
     }
 
     ///
@@ -147,7 +163,15 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn get_sumidero(&self) -> &Vertice
     {
-        &self.sumidero
+        self.flujos_sumidero.get(0).unwrap().get_arco().get_vertices().unwrap().1
+    }
+
+    ///
+    /// POST: Valor de salida de la red (suma de los valores de los flujos salientes de la fuente)
+    /// 
+    pub fn get_valor_red(&self) -> u64
+    {
+        self.flujos_fuente.iter().map(|x| x.get_valor()).sum()
     }
 
     ///
@@ -155,8 +179,15 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn into_digrafo(self) -> Digrafo<Vertice, Peso>
     {
-        let arcos: Vec<Diarista<Vertice, Peso>> = self.flujos.into_iter()
+        let mut arcos_fuente: Vec<Diarista<Vertice, Peso>> = self.flujos_fuente.into_iter()
                             .map(|x| x.into_arco()).collect();
+        let mut arcos_sumidero: Vec<Diarista<Vertice, Peso>> = self.flujos_sumidero.into_iter()
+                            .map(|x| x.into_arco()).collect();
+        let mut arcos: Vec<Diarista<Vertice, Peso>> = self.flujos.into_iter()
+                            .map(|x| x.into_arco()).collect();
+
+        arcos.append(&mut arcos_fuente);
+        arcos.append(&mut arcos_sumidero);
         Digrafo::from_aristas(arcos)
     }
 
@@ -169,8 +200,8 @@ where Vertice: VerticeT, Peso: PesoT
         Self {
             nombre: self.nombre.clone(),
             flujos: self.flujos.clone(),
-            fuente: self.fuente.clone(),
-            sumidero: self.sumidero.clone()
+            flujos_fuente: self.flujos_fuente.clone(),
+            flujos_sumidero: self.flujos_sumidero.clone()
         }
     }
 }

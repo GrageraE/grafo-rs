@@ -11,7 +11,8 @@ fn test_comparacion_flujos()
     let arco4: Diarista<i32, NoPeso> = Diarista::arista_sin_peso(4, 3);
     let mut red: Red<i32, NoPeso> = Red::new(None, 1, [(2, 1), (3, 1)].to_vec(),
             10, [(9, 2), (8, 2)].to_vec(), 
-            [(arco1.clone(), 1), (arco2.clone(), 2), (arco3.clone(), 3), (arco4.clone(), 7)].to_vec());
+            [(arco1.clone(), 1), (arco2.clone(), 2), (arco3.clone(), 3), (arco4.clone(), 7)].to_vec())
+            .expect("La red debe poder construirse");
 
     red.set_valor(&arco1, 8);
     assert!(red.get_valor(&arco1).expect("El flujo existe") == 0);
@@ -36,9 +37,12 @@ fn test_creacion_red()
 {
     let arco1: Diarista<i32, NoPeso> = Diarista::arista_sin_peso(1, 2);
     let red = Red::new(None, 1, [(2, 2)].to_vec(), 
-        2, [(1, 4)].to_vec(), vec![(arco1.clone(), 10)]);
+        2, [(1, 4)].to_vec(), vec![(arco1.clone(), 10)])
+        .expect("La red debe poder construirse");
     assert!(red.get_flujo(&arco1).expect("arco1 no esta en la red").get_capacidad() == 2, 
         "La funcion get_valor devuelve el primer flujo");
+    assert!(red.get_fuente() == &1);
+    assert!(red.get_sumidero() == &2);
 }
 
 #[test]
@@ -50,7 +54,8 @@ fn test_incremento_flujo()
     let arco4: Diarista<i32, NoPeso> = Diarista::arista_sin_peso(4, 3);
     let mut red: Red<i32, NoPeso> = Red::new(None, 1, [(2, 1), (3, 1)].to_vec(),
             10, [(9, 2), (8, 2)].to_vec(), 
-            [(arco1.clone(), 1), (arco2.clone(), 2), (arco3.clone(), 3), (arco4.clone(), 7)].to_vec());
+            [(arco1.clone(), 1), (arco2.clone(), 2), (arco3.clone(), 3), (arco4.clone(), 7)].to_vec())
+            .expect("La red debe poder formarse");
 
     incrementar_flujo!(red, &arco1).expect("Debe ser posible incrementar el flujo");
     assert!(red.get_valor(&arco1).unwrap() == 1);
@@ -59,4 +64,12 @@ fn test_incremento_flujo()
     assert!(incrementar_flujo!(red, &arco2, 10) == None, "Es superior a la capacidad");
     assert!(red.get_valor(&arco2).unwrap() == 0);
     incrementar_flujo!(red, &arco2, 2).expect("Debe ser posible incrementar el valor");
+
+    assert!(red.get_valor_red() == 0);
+    incrementar_flujo!(red, &Diarista::arista_sin_peso(1, 2));
+    assert!(red.get_valor_red() == 1);
+    incrementar_flujo!(red, &Diarista::arista_sin_peso(1, 3));
+    assert!(red.get_valor_red() == 2);
+    incrementar_flujo!(red, &Diarista::arista_sin_peso(1, 2));
+    assert!(red.get_valor_red() == 2, "La arista debe de haber alcanzado su limite de capacidad");
 }

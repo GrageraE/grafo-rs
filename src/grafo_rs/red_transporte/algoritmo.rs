@@ -1,4 +1,4 @@
-use crate::grafo_rs::{AristaT, Diarista, PesoT, VerticeT};
+use crate::{grafo_rs::{AristaT, Diarista, PesoT, VerticeT}, incrementar_flujo};
 
 use super::Red;
 
@@ -110,4 +110,32 @@ where Vertice: VerticeT, Peso: PesoT
     camino.insert(0, arista.0);
     camino.insert(0, arista.1);
     Some(camino)
+}
+
+///
+/// PRE: Red mutable
+/// 
+/// POST: La red se maximiza
+/// 
+/// NOTA: Implementacion del algoritmo de Edmods-Karp
+/// 
+pub fn maximizar_flujo<Vertice, Peso>(red: &mut Red<Vertice, Peso>)
+where Vertice: VerticeT, Peso: PesoT
+{
+    // Buscamos caminos de F-aumento
+    let mut camino_aumento = encontrar_camino_aumento(red);
+    while let Some(camino) = camino_aumento
+    {
+        let camino: Vec<Diarista<Vertice, Peso>> = camino.into_iter().cloned().collect();
+        // Calculamos el flujo que tenemos que incrementar
+        let aumento = camino.iter()
+                        .map(|x| red.get_valor_restante(x).unwrap())
+                        .min().unwrap();
+        // Incrementamos el flujo de los arcos
+        for arco in camino.into_iter()
+        {
+            incrementar_flujo!(red, &arco, aumento);
+        }
+        camino_aumento = encontrar_camino_aumento(red);
+    }
 }

@@ -3,6 +3,8 @@ use crate::grafo_rs::{GrafoT, Digrafo, AristaT, Diarista, PesoT, VerticeT};
 pub mod flujo;
 pub use flujo::Flujo;
 
+pub mod algoritmo;
+
 #[cfg(test)]
 mod tests;
 
@@ -143,6 +145,25 @@ where Vertice: VerticeT, Peso: PesoT
     }
 
     ///
+    /// PRE: Diarista
+    /// POST: Diferencia entre capacidad y valor del flujo del arco, si esta en la Red. None eoc
+    /// 
+    pub fn get_valor_restante(&self, arco: &Diarista<Vertice, Peso>) -> Option<u64>
+    {
+        let fl = self.get_flujo(arco)?;
+        Some(fl.get_valor_restante())
+    }
+
+    ///
+    /// PRE: Diarista
+    /// POST: Si el arco esta en la red, un valor booleano. None eoc
+    /// 
+    pub fn arco_saturado(&self, arco: &Diarista<Vertice, Peso>) -> Option<bool>
+    {
+        Some(self.get_valor_restante(arco)? == 0)
+    }
+
+    ///
     /// POST: Nombre de la red
     /// 
     pub fn get_nombre(&self) -> Option<&str>
@@ -172,6 +193,30 @@ where Vertice: VerticeT, Peso: PesoT
     pub fn get_valor_red(&self) -> u64
     {
         self.flujos_fuente.iter().map(|x| x.get_valor()).sum()
+    }
+
+    ///
+    /// POST: Vector con referencias a los flujos de la fuente
+    /// 
+    pub fn get_flujos_fuente(&self) -> Vec<&Flujo<Vertice, Peso>>
+    {
+        self.flujos_fuente.iter().collect()
+    }
+
+    ///
+    /// POST: Vector con referencias a los flujos del sumidero
+    /// 
+    pub fn get_flujos_sumidero(&self) -> Vec<&Flujo<Vertice, Peso>>
+    {
+        self.flujos_sumidero.iter().collect()
+    }
+
+    ///
+    /// POST: Vector con referencias a los flujos interiores
+    /// 
+    pub fn get_flujos(&self) -> Vec<&Flujo<Vertice, Peso>>
+    {
+        self.flujos.iter().collect()
     }
 
     ///

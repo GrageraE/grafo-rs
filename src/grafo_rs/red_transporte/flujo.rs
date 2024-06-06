@@ -41,6 +41,14 @@ where Vertice: VerticeT, Peso: PesoT
     }
 
     ///
+    /// POST: Diferencia entre la capacidad y el valor del flujo
+    /// 
+    pub fn get_valor_restante(&self) -> u64
+    {
+        self.capacidad - self.valor
+    }
+
+    ///
     /// PRE: Nuevo valor
     /// POST: Si el nuevo valor no supera la capacidad, se devuelve Some(()) y se aplica. None eoc. 
     /// 

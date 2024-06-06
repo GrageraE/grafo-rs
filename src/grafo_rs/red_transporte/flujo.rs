@@ -49,6 +49,14 @@ where Vertice: VerticeT, Peso: PesoT
     }
 
     ///
+    /// POST: Si el flujo esta saturado
+    /// 
+    pub fn saturado(&self) -> bool
+    {
+        self.get_valor_restante() == 0
+    }
+
+    ///
     /// PRE: Nuevo valor
     /// POST: Si el nuevo valor no supera la capacidad, se devuelve Some(()) y se aplica. None eoc. 
     /// 

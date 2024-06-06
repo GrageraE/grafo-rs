@@ -160,7 +160,8 @@ where Vertice: VerticeT, Peso: PesoT
     /// 
     pub fn arco_saturado(&self, arco: &Diarista<Vertice, Peso>) -> Option<bool>
     {
-        Some(self.get_valor_restante(arco)? == 0)
+        let fl = self.get_flujo(arco)?;
+        Some(fl.saturado())
     }
 
     ///

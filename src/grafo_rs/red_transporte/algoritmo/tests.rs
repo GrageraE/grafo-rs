@@ -55,3 +55,62 @@ fn test_maximizar_flujo()
     assert!(red.get_valor(&Diarista::arista_sin_peso('s', 'c')) == Some(5));
     assert!(red.get_valor(&arco1) == Some(3));
 }
+
+#[test]
+fn test_maximizar_flujo_2()
+{
+    let arco1 = Diarista::arista_sin_peso('1', '2');
+    let arco2 = Diarista::arista_sin_peso('2', '1');
+    let arco3 = Diarista::arista_sin_peso('1', '3');
+    let arco4 = Diarista::arista_sin_peso('3', '2');
+    let arco5 = Diarista::arista_sin_peso('2', '4');
+    let arco6 = Diarista::arista_sin_peso('4', '3');
+    
+    let mut red: Red<char, NoPeso> = Red::new(None, 's', [('1', 16), ('2', 13)].to_vec(), 
+        't', [('3', 20), ('4', 4)].to_vec(),
+        [(arco1.clone(), 10), (arco2.clone(), 4), (arco3.clone(), 12), (arco4.clone(), 9),
+        (arco5.clone(), 14), (arco6.clone(), 7)].to_vec()).expect("La red debe poder construirse");
+    maximizar_flujo(&mut red);
+    assert!(red.get_valor_red() == 23);
+}
+
+#[test]
+fn test_maximizar_flujo_3()
+{
+    let arco1 = Diarista::arista_sin_peso('A', 'M');
+    let arco2 = Diarista::arista_sin_peso('A', 'I');
+    let arco3 = Diarista::arista_sin_peso('B', 'I');
+    let arco4 = Diarista::arista_sin_peso('C', 'I');
+    let arco5 = Diarista::arista_sin_peso('C', 'N');
+    let arco6 = Diarista::arista_sin_peso('I', 'i');
+    let arco7 = Diarista::arista_sin_peso('i', 'M');
+    let arco8 = Diarista::arista_sin_peso('i', 'N');
+
+    let mut red: Red<char, NoPeso> = Red::new(None, 's', [('A', 1000), ('B', 1000), ('C', 1000)].to_vec(), 
+        't', [('M', 1000), ('N', 1000)].to_vec(), [(arco1.clone(), 30),
+            (arco2.clone(), 40), (arco3.clone(), 30), (arco4.clone(), 80), (arco5.clone(), 20), (arco6.clone(), 70),
+            (arco7.clone(), 60), (arco8.clone(), 50)].to_vec()).expect("La red debe poder construirse");
+    maximizar_flujo(&mut red);
+
+    assert!(red.get_valor_red() == 120);
+}
+
+#[test]
+fn test_maximizar_flujo_4()
+{
+    let arco1 = Diarista::arista_sin_peso('b', 'a');
+    let arco2 = Diarista::arista_sin_peso('a', 'e');
+    let arco3 = Diarista::arista_sin_peso('a', 'c');
+    let arco4 = Diarista::arista_sin_peso('c', 'b');
+    let arco5 = Diarista::arista_sin_peso('c', 'e');
+    let arco6 = Diarista::arista_sin_peso('b', 'd');
+    let arco7 = Diarista::arista_sin_peso('d', 'e');
+
+    let mut red: Red<char, NoPeso> = Red::new(None, 's', [('a', 4), ('b', 6)].to_vec(), 
+        't', [('a', 5), ('e', 5)].to_vec(), [(arco1.clone(), 2),
+            (arco2.clone(), 1), (arco3.clone(), 5), (arco4.clone(), 3), (arco5.clone(), 5), (arco6.clone(), 3), (arco7.clone(), 2)].to_vec())
+        .expect("La red debe poder construirse");
+    maximizar_flujo(&mut red);
+
+    assert!(red.get_valor_red() == 8);
+}

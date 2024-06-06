@@ -6,11 +6,9 @@ use super::Red;
 mod tests;
 
 ///
-/// PRE: Red a modificar
+/// Funcion auxiliar que encuentra un camino de F-aumento en la red, si existe.
 /// 
-/// POST: La red dada tendra flujo maximo
-/// 
-/// NOTA: Implementacion del algoritmo de Edmonds
+/// Implementa el algoritmo de Edmonds-Karp
 /// 
 fn encontrar_camino_aumento<Vertice, Peso>(red: &Red<Vertice, Peso>) 
     -> Option<Vec<&Diarista<Vertice, Peso>>>
@@ -39,9 +37,6 @@ where Vertice: VerticeT, Peso: PesoT
                                 }
                             }).collect();
     let arcos = {arcos_intermedios.append(&mut arcos_finales); arcos_intermedios};
-    // Variables temporales
-    let mut vertices_visitados: Vec<&Vertice> = vec![];
-    let mut arcos_recorridos: Vec<(&&Diarista<Vertice, Peso>, &&Diarista<Vertice, Peso>)> = vec![];
     /*
      * Corremos el algoritmo de busqueda en anchura para encontrar un camino de F-aumento.
      * Incluiremos, junto con el arco, una referencia al arco anterior
@@ -53,23 +48,28 @@ where Vertice: VerticeT, Peso: PesoT
                             |v| v.get_vertices().unwrap().1 == x.get_vertices().unwrap().0)?))
                     )
                     .collect();
-   
+    // Variables temporales
+    let mut vertices_visitados: Vec<&Vertice> = aristas_frontera.iter()
+                    .map(|x| x.0.get_vertices().unwrap().0)
+                    .collect();
+    let mut arcos_recorridos: Vec<(&&Diarista<Vertice, Peso>, &&Diarista<Vertice, Peso>)> = vec![];   
+    
     let mut ultima_arista: Option<(&&Diarista<Vertice, Peso>, &&Diarista<Vertice, Peso>)> = None;
     while !aristas_frontera.is_empty()
     {
         let mut arcos_agregados: Vec<&&Diarista<Vertice, Peso>> = vec![];
         // Añadimos las aristas frontera
-        for (pos, arista) in aristas_frontera.into_iter().enumerate()
+        for (arista, arista_anterior) in aristas_frontera.into_iter()
         {
-            let vertice_contrario = &arista.0.get_vertices().unwrap().1;
+            let vertice_contrario = &arista.get_vertices().unwrap().1;
             if !vertices_visitados.contains(vertice_contrario)
             {
                 vertices_visitados.push(vertice_contrario);
-                arcos_recorridos.push(arista);
-                arcos_agregados.push(arista.0);
+                arcos_recorridos.push((arista, arista_anterior));
+                arcos_agregados.push(arista);
                 if *vertice_contrario == red.get_sumidero()
                 {
-                    ultima_arista = Some(arista);
+                    ultima_arista = Some((arista, arista_anterior));
                 }
             }
         }
@@ -85,6 +85,7 @@ where Vertice: VerticeT, Peso: PesoT
             let vertice = arco.get_vertices().unwrap().1;
             let mut aristas_vertice: Vec<(&&Diarista<Vertice, Peso>, &&Diarista<Vertice, Peso>)> = arcos.iter()
                         .filter(|x| x.es_accesible(vertice))
+                        .filter(|x| !vertices_visitados.contains(&x.other(vertice).unwrap()))
                         .map(|x| (x, arco))
                         .collect();
             nuevos_vertices.append(&mut aristas_vertice.iter()

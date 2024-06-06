@@ -5,9 +5,6 @@ use crate::grafo_rs::{Arista, AristaT,
 #[cfg(test)]
 mod tests;
 
-pub mod arbol;
-pub use arbol::Arbol;
-
 pub struct Grafo<Vertice, Peso = NoPeso> 
 where Vertice: VerticeT, Peso: PesoT {
     lista_aristas: Vec<Arista<Vertice, Peso>>,

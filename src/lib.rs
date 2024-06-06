@@ -19,10 +19,11 @@ pub mod grafo_rs
     pub use grafo::Grafo;
 
     ///
-    /// Submodulo Arbol de Grafo. Componentes:
+    /// Modulo Arbol. Componentes:
     ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
     /// 
-    pub use grafo::Arbol;
+    pub mod arbol;
+    pub use arbol::Arbol;
 
     ///
     /// Modulo Digrafo. Componentes:
@@ -80,6 +81,7 @@ pub mod grafo_rs
     pub mod red_transporte;
     pub use red_transporte::Red;
     pub use red_transporte::Flujo;
+    pub use red_transporte::maximizar_flujo;
     
     ///
     /// Modulo Etiquetado. Componentes:

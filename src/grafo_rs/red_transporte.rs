@@ -4,6 +4,7 @@ pub mod flujo;
 pub use flujo::Flujo;
 
 pub mod algoritmo;
+pub use algoritmo::maximizar_flujo;
 
 #[cfg(test)]
 mod tests;

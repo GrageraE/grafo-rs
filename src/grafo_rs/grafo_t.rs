@@ -52,7 +52,6 @@ where Vertice: VerticeT, Peso: PesoT
 
     ///
     /// Devuelve la lista de vertices del grafo
-    /// NOTA: Implementacion por defecto para grafos constantes o no trivialmente modificables
     /// 
     fn get_vertices(&self) -> Vec<&Vertice>;
 

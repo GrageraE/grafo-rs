@@ -2,12 +2,24 @@ use crate::grafo_rs::{Arista, AristaT,
                     NoPeso, PesoT, 
                     VerticeT, GrafoT};
 
+pub mod bipartido;
+pub use bipartido::Bipartido;
+
 #[cfg(test)]
 mod tests;
 
 pub struct Grafo<Vertice, Peso = NoPeso> 
 where Vertice: VerticeT, Peso: PesoT {
     lista_aristas: Vec<Arista<Vertice, Peso>>,
+}
+
+impl<Vertice, Peso> Grafo<Vertice, Peso>
+where Vertice: VerticeT, Peso: PesoT
+{
+    pub fn bipartido(&self) -> Option<Bipartido<Vertice, Peso>>
+    {
+        todo!("Algortimo de deteccion de grafo bipartido");
+    }
 }
 
 impl<Vertice, Peso> GrafoT<Vertice, Peso> for Grafo<Vertice, Peso>

@@ -19,6 +19,12 @@ pub mod grafo_rs
     pub use grafo::Grafo;
 
     ///
+    /// Submodulo Bipartido de Grafo. Componentes:
+    ///     Bipartido: estructura de grafo bipartido
+    /// 
+    pub use grafo::Bipartido;
+    
+    ///
     /// Modulo Arbol. Componentes:
     ///     Arbol: estructura envoltorio que asegura que el grafo contenido es un arbol
     /// 

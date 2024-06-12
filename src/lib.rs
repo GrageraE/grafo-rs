@@ -88,6 +88,13 @@ pub mod grafo_rs
     pub use red_transporte::Red;
     pub use red_transporte::Flujo;
     pub use red_transporte::maximizar_flujo;
+
+    ///
+    /// Modulo Emperejamiento. Componentes:
+    ///     Emparejamiento: emparejamiento de aristas
+    /// 
+    pub mod emparejamiento;
+    pub use emparejamiento::Emparejamiento;
     
     ///
     /// Modulo Etiquetado. Componentes:
